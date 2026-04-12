@@ -1,13 +1,13 @@
 ---
 artifact_meta:
   produced_by: "os.loop"
-  produced_at: "2026-04-12T04:10:00Z"
-  confidence: 0.65
+  produced_at: "2026-04-12T05:50:00Z"
+  confidence: 0.72
   inputs_used:
     - ".specify/artifacts/sketch.md"
     - ".specify/extensions.yml"
   stale_after: "on_input_change"
-  revision: 14
+  revision: 15
   quality_scores:
     specificity: null
     actionability: null
@@ -34,19 +34,18 @@ main
 |----------|--------|------------|-------|-------|----------|
 | sketch.md | ✅ | 0.3 | hypothesis | ⚠️ Predates twist — does not include Undisk integration vision | 1 |
 | codebase-profile.md | ❌ (N/A greenfield) | — | — | — | — |
-| improvement-opportunities.md | ❌ (N/A greenfield) | — | — | — | — |
-| phase-1/market-map.md | 🔄 IN PROGRESS | — | — | — | 2 |
-| phase-1/icp.md | 🔄 IN PROGRESS | — | — | — | 2 |
-| phase-1/why-now.md | 🔄 IN PROGRESS | — | — | — | 2 |
-| phase-1/competitor-matrix.md | ❌ (archived U1) | — | — | — | — |
-| phase-1/ux-teardown.md | ❌ (archived U1) | — | — | — | — |
-| phase-1/steal-differentiate-ignore.md | ❌ (archived U1) | — | — | — | — |
-| phase-1/usp.md | ❌ (archived U1) | — | — | — | — |
-| phase-1/feasibility.md | ❌ (archived U1) | — | — | — | — |
-| phase-1/growth-plan.md | ❌ | — | — | — | — |
-| phase-1/brutal-critique.md | ❌ | — | — | — | — |
-| phase-1/tradeoff-matrix.md | ❌ | — | — | — | — |
-| phase-1/moat.md | ❌ | — | — | — | — |
+| phase-1/market-map.md | ✅ | 0.82 | draft | No | 2 |
+| phase-1/icp.md | ✅ | 0.78 | draft | No | 2 |
+| phase-1/why-now.md | ✅ | 0.85 | draft | No | 2 |
+| phase-1/competitor-matrix.md | ✅ | 0.82 | draft | No | 2 |
+| phase-1/ux-teardown.md | ✅ | 0.75 | draft | No | 2 |
+| phase-1/steal-differentiate-ignore.md | ✅ | 0.80 | draft | No | 2 |
+| phase-1/usp.md | ✅ | 0.85 | draft | ⚠️ Limiter #3 needs Undisk reframe | 2 |
+| phase-1/feasibility.md | ✅ | 0.82 | draft | ⚠️ R1 Undisk risk eliminated; YELLOW may upgrade | 2 |
+| phase-1/validate.md | ✅ | 0.78 | draft | ⚠️ Checklist #6 pre-satisfied | 2 |
+| phase-1/critic-report.md | ✅ | 0.68 | draft | No (replayed with Undisk ownership) | 3 |
+| phase-1/tradeoff.md | ✅ | — | draft | No (replayed with Undisk ownership) | 3 |
+| phase-1/moat.md | ✅ | 0.75 | draft | No (replayed with Undisk ownership) | 3 |
 | phase-2/ (all) | ❌ | — | — | — | — |
 | phase-3/ (all) | ❌ | — | — | — | — |
 | phase-4/ (all) | ❌ | — | — | — | — |
@@ -56,126 +55,67 @@ main
 | Cycle | Agent Invoked | Artifact Produced | Confidence | Quality Issues |
 |-------|---------------|-------------------|------------|----------------|
 | 1 | os.sketch | sketch.md | 0.3 | None — hypothesis grade |
-| 2 | os.market | market-map.md, icp.md, why-now.md | 0.50-0.55 | USP falsified by Dato overlap. **UNDONE in U1** |
-| 3 | os.competition | competitor-matrix.md, ux-teardown.md, steal-differentiate-ignore.md | 0.55-0.60 | ~20% model-sourced in ux-teardown. **UNDONE in U1** |
-| 4 | os.usp | usp.md | 0.75 | All 4 stress tests passed. **UNDONE in U1** |
-| 5 | os.feasibility | feasibility.md | 0.80 | Zero critical blockers. **UNDONE in U1** |
-| 6 | os.market (REPLAY) | 🔄 IN PROGRESS | — | Replay with twist: Delta-T x Undisk "Temporal Command Center" |
-
-## Cycle 7 Evaluation
-
-### os.competition -> competitor-matrix.md, ux-teardown.md, steal-differentiate-ignore.md
-- **All 3 outputs exist:** competitor-matrix.md (18KB), ux-teardown.md (24KB), steal-differentiate-ignore.md (25KB) = 67KB total
-- **Confidence scores:** 0.82, 0.75, 0.80
-- **All required sections present plus extras (Key Strategic Finding, Cross-Cutting UX Patterns, Classification Methodology)**
-- **Citation quality:** ~75% verified across all 3 artifacts
-- **Gate criteria:** All passed — every feature classified, all tied to ICP, strengths+weaknesses for each competitor
-
-### Key strategic findings:
-1. **NO existing tool** lets a developer set timezone-gated rules for AI agents from a mobile interface
-2. **15 competitors analyzed** across 3 dimensions (agent orchestration, world clocks, agent infrastructure)
-3. **6 Steal / 7 Differentiate / 9 Ignore** classification across 22 features
-4. **Temporal.io is closest analog** but has no mobile interface, no MCP integration, no timezone-gating
-5. **The gap is confirmed:** pieces exist in isolation but nobody has assembled them into a temporal command center
-
-## Cycle 8 Evaluation
-
-### os.usp -> usp.md
-- **Output:** usp.md (326 lines, confidence 0.85)
-- **All 9 required sections present** including Positioning Matrix and Compound Moat
-- **USP:** "Delta-T Zaman is the only mobile-first temporal governance layer that lets a developer set timezone-gated execution rules, circadian kill-switches, and workspace-level undo for autonomous AI agents — controlled entirely from a clock interface on their phone."
-- **Falsifiability:** 3 concrete criteria defined
-- **All 4 stress tests pass:** 0/15 competitors substitutable
-- **Gate criteria:** All passed
-
-## Cycle 9 Evaluation
-
-### os.feasibility -> feasibility.md
-- **Output:** feasibility.md (387 lines, 33KB, confidence 0.82)
-- **Verdict: YELLOW — Proceed with mitigations**
-- **All 3 journeys mapped to Undisk MCP tools:** set_policy for gates/fences, list_changes+list_versions+get_diff+restore_version for undo slider
-- **Infrastructure cost:** ~$47/mo at 1K users, break-even at 3 paying customers ($19 tier)
-- **10-week MVP** targeting Journey 1 (Deploy Gate) on iOS + macOS
-- **10 risks in matrix:** top = Undisk dependency, unvalidated UX, category risk
-- **4 required mitigations:** UX prototype test (10+), Tauri iOS physical device gate, Undisk team contact, 15+ customer discovery interviews
-- **Gate criteria:** All passed — every component rated, journeys mapped, cost model with 3 scale points
-
-## Cycle 10 Evaluation
-
-### os.validate -> validate.md
-- **Output:** validate.md (641 lines, 48KB, confidence 0.78)
-- **8 acquisition channels evaluated** with priority ratings (P0: HN/Reddit/IH, Undisk ecosystem, Building in Public)
-- **Hypothesis explicitly stated:** "Solo devs and small teams using AI agents across 3+ TZs will pay $19+/mo for mobile-first temporal governance"
-- **15-question customer discovery script** included
-- **12 quantitative PROCEED/ITERATE/PIVOT criteria** defined
-- **Metrics framework:** North star (temporal rules enforced/week) + 4 leading + 4 lagging
-- **10-item pre-build checklist** including 15 interviews, 200 waitlist signups, Undisk partnership
-- **29 upstream citations** — all referencing icp.md, usp.md, or feasibility.md
-- **Gate criteria:** All passed
-
-### Pipeline status: ALL 10 PHASE 1 ARTIFACTS COMPLETE
-Approaching os.critic hard gate. All artifacts at confidence >= 0.75.
-
-## Cycle 11 Evaluation (HARD GATE)
-
-### os.critic -> critic-report.md
-- **Output:** critic-report.md (242 lines, confidence 0.72)
-- **Verdict: CONDITIONAL PASS**
-- **7 contradictions found** (C1-C7): SOM fantasy, mobile-first vs MVP cuts mobile, urgency vs timeline, ICP mismatch, etc.
-- **5 fatal flaws:** Invented demand (45%), Undisk dependency (30%), Solo founder scope (35%), Clock-as-UI risk (25%), Phantom market (20%)
-- **13 assumptions audited**
-- **3 hard gates before proceeding:**
-  1. 15+ customer interviews (8/15 must rank temporal governance top-5 pain)
-  2. Prototype UX test with 10+ devs (6/10 must prefer clock UI)
-  3. Tauri iOS physical device build confirmed
-- **Confidence recalibrated:** Most artifacts adjusted downward 0.02-0.10
-- **Pipeline status:** CONDITIONAL PASS — proceed to os.tradeoff + os.moat (hard gates are PRE-BUILD, not pre-analysis)
+| 2 | os.market | market-map.md, icp.md, why-now.md | 0.50-0.55 | **UNDONE in U1** |
+| 3 | os.competition | competitor-matrix.md, ux-teardown.md, steal-differentiate-ignore.md | 0.55-0.60 | **UNDONE in U1** |
+| 4 | os.usp | usp.md | 0.75 | **UNDONE in U1** |
+| 5 | os.feasibility | feasibility.md | 0.80 | **UNDONE in U1** |
+| 6 | os.market (REPLAY) | market-map.md r2, icp.md r2, why-now.md r2 | 0.78-0.85 | Twist: Delta-T × Undisk "Temporal Command Center" |
+| 7 | os.competition | competitor-matrix.md r2, ux-teardown.md r2, sdi.md r2 | 0.75-0.82 | 15 competitors, gap confirmed |
+| 8 | os.usp | usp.md r2 | 0.85 | All 4 stress tests pass, 0/15 substitutable |
+| 9 | os.feasibility | feasibility.md r2 | 0.82 | YELLOW verdict, 10 risks, 10-week MVP |
+| 10 | os.validate | validate.md r2 | 0.78 | 8 channels, 15-question interview, 10-item checklist |
+| 11 | os.critic (r2) | critic-report.md r2 | 0.72 | CONDITIONAL PASS. **UNDONE in U2** — treated Undisk as hostile 3rd-party |
+| 12 | os.tradeoff (r2) | tradeoff.md r2 | — | **UNDONE in U2** — lacked Undisk ownership context |
+| 13 | os.moat (r2) | moat.md r2 | — | **UNDONE in U2** — lacked Undisk ownership context |
+| 11r | os.critic (REPLAY r3) | critic-report.md r3 | 0.68 | CONDITIONAL PASS. F2 Undisk→0% kill. F1 demand 40% remains top risk |
+| 12r | os.tradeoff (REPLAY r3) | tradeoff.md r3 | — | 34 features: 10 build / 6 conditional / 18 cut. **Platform: macOS desktop, NOT iOS** |
+| 13r | os.moat (REPLAY r3) | moat.md r3 | 0.75 | Vertical integration moat (durability 5). 12-18mo competitor replication barrier |
 
 ## Undo History
 
 | Undo | From Cycle | To Cycle | Reason | Artifacts Archived |
 |------|-----------|----------|--------|-------------------|
-| U1 | 5 | 1 | replay os.market with twist: Delta-T x Undisk Integration "Temporal Command Center" | 8 artifacts archived to .archive/undo-1/ |
+| U1 | 5 | 1 | replay os.market with twist: Delta-T × Undisk Integration | 8 artifacts → .archive/undo-1/ |
+| U2 | 13 | 10 | replay os.critic onward: Undisk MCP owned by same team (context correction) | 3 artifacts → .archive/undo-2/ (critic r2, tradeoff r2, moat r2) |
 
 ## Checkpoints
 
 | Checkpoint | Timestamp | Branch | Location |
 |-----------|-----------|--------|----------|
 | cycle-5-pre-undo | 2026-04-12T04:08:00Z | main | checkpoints/cycle-5-pre-undo.md |
+| cycle-7-pre | 2026-04-12T04:20:00Z | main | checkpoints/cycle-7-pre.md |
+| cycle-8-pre | 2026-04-12T04:30:00Z | main | checkpoints/cycle-8-pre.md |
+| cycle-9-pre | 2026-04-12T04:40:00Z | main | checkpoints/cycle-9-pre.md |
+| cycle-10-pre | 2026-04-12T04:55:00Z | main | checkpoints/cycle-10-pre.md |
+| cycle-11-pre-r2 | 2026-07-20T01:00:00Z | main | checkpoints/cycle-11-pre-r2.md |
 
+## Critical Context (Injected at U2)
+**The team building Delta-T Zaman IS the team that built and operates Undisk MCP.**
+- Undisk is NOT a third-party dependency — it is a sister product
+- Delta-T is a first-party showcase/distribution channel for Undisk
+- This eliminates all vendor dependency risk and creates a vertical integration moat
+- All artifacts from cycle 11r onward include this context
 
-## Cycle 6 Evaluation
+## Phase 1 Completion Status
+- **13/13 Phase 1 artifacts complete** (sketch + 10 analysis + tradeoff + moat)
+- **Hard gate (os.critic):** CONDITIONAL PASS at 0.68
+- **Key decisions from tradeoff:** macOS desktop (not iOS), Deploy Gate only, 6-8 week build
+- **Moat verdict:** Vertical integration (durability 5) — competitors need 12-18mo to replicate
 
-### os.market (REPLAY with twist) -> market-map.md, icp.md, why-now.md
-- **All 3 outputs exist:** market-map.md (14KB), icp.md (14KB), why-now.md (14KB) = 42KB total
-- **Frontmatter valid:** All 3 have proper artifact_meta with revision: 2
-- **Confidence scores:** 0.82, 0.78, 0.85 (highest batch yet)
-- **All required sections present:** market-map 7/5, icp 6/4, why-now 4/3 (all exceed requirements)
-- **Citation quality:** 30+ verified in market-map, 18 verified in icp, 33 verified in why-now
-- **Verification Needed sections:** Present in market-map and icp (as required when model-sourced >50%)
-- **Twist successfully integrated:** Product repositioned from "world clock utility" to "temporal command center for AI agent orchestration"
+## Next Recommended Action
 
-### Key strategic findings (post-twist):
-1. **Two-market positioning:** World clock utility TAM (6.4B productivity software) + AI agent orchestration TAM (.8B, 23.7% CAGR to 8.6B by 2034)
-2. **The temporal governance gap:** No existing tool lets developers set timezone-gated rules for autonomous AI agents
-3. **MCP universality catalyst:** Anthropic MCP adopted by all major AI vendors in 2025 -- creates the standardized execution layer Delta-T needs
-4. **ICP refined:** Solo developers and small teams (2-10 people) who use AI coding agents daily AND work across 3+ timezones
-5. **Revenue model shift:** From .99 one-time utility to SaaS infrastructure (9-49/mo) for the agent orchestration layer
-6. **Critical timing window:** 2025-2027 is the "trust gap" -- agents can execute but developers lack temporal governance tools
+**Phase 1 is COMPLETE.** The pipeline can now proceed to Phase 2.
 
-## Next Recommended Action (Cycle 12)
+**Option A — os.simplify (recommended)**
+Reduce complexity further before entering speckit. The tradeoff already cut aggressively, but os.simplify applies a second pass with the mandate: "cut features justified only by data."
 
-**Agent:** os.tradeoff
-**Status:** READY -- os.critic CONDITIONAL PASS achieved (hard gates are pre-build, not pre-analysis)
-**Reason:** Must prioritize ruthlessly -- identify what NOT to build. The critic found scope risk (solo founder) and MVP contradictions. os.tradeoff will resolve what stays and what gets cut.
-**Expected output:** tradeoff.md
+**Option B — os.cross-examine**
+Full-corpus semantic cross-examination across all 13 artifacts. Detects broken decision chains, contradictions not caught by critic, and scope mismatches between tradeoff and other artifacts.
 
-## Pipeline Progress
-- **Completed:** 7/24 agents (os.sketch, os.market replay, os.competition, os.usp, os.feasibility, os.validate, os.critic)
-- **Artifacts:** 11 surviving (sketch + 3 market + 3 competition + usp + feasibility + validate + critic-report), 8 archived
-- **Phase 1 progress:** 11/12 artifacts -- CONDITIONAL PASS, finishing Phase 1
-- **Next:** os.tradeoff (cycle 12) -> os.moat (cycle 13) -> Phase 2
-- **Critical path:** os.competition -> os.usp -> os.feasibility -> os.validate -> os.critic (hard gate)
+**Option C — speckit.specify (skip directly to Phase 2)**
+Begin writing the feature specification. Requires the tradeoff decisions to be final.
+
+**Recommendation:** Run os.cross-examine first — the U2 replay corrected Undisk context in critic/tradeoff/moat but did NOT update usp.md, feasibility.md, or validate.md. Cross-examine will detect these stale references and feed os.revise to fix them before speckit.
 
 ## Escalations
 **No active escalations.**
