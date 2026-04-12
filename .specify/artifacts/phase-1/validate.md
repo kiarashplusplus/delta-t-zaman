@@ -8,7 +8,7 @@ artifact_meta:
     - ".specify/artifacts/phase-1/usp.md"
     - ".specify/artifacts/phase-1/feasibility.md"
   stale_after: "on_input_change"
-  revision: 2
+  revision: 3
   quality_scores:
     specificity: 4
     actionability: 5
@@ -21,7 +21,7 @@ artifact_meta:
 
 ## Executive Summary
 
-This artifact defines how Delta-T Zaman will acquire its first 100 users, validate its core hypothesis before writing production code, and sequence its go-to-market for the first 8 weeks post-MVP. The central hypothesis is falsifiable and quantitative: **solo developers using AI coding agents across 3+ timezones will pay $19+/mo for mobile-first temporal governance.** This must be validated through 15+ customer discovery interviews, a landing-page smoke test, and a clickable prototype test — all before the 10-week MVP build begins [Source — feasibility.md: Required mitigations].
+This artifact defines how Delta-T Zaman will acquire its first 100 users, validate its core hypothesis before writing production code, and sequence its go-to-market for the first 8 weeks post-MVP. The central hypothesis is falsifiable and quantitative: **solo developers using AI coding agents across 3+ timezones will use a macOS menu bar temporal governance app to set timezone-gated deploy rules.** This must be validated through 15+ customer discovery interviews, a landing-page smoke test, and a clickable prototype test — all before the 6-8 week MVP build begins [Source — feasibility.md r3: Required mitigations; tradeoff.md r3: macOS desktop, Deploy Gate only].
 
 The validation plan is designed for a solo founder with near-zero marketing budget. All P0 channels are free. The go/no-go decision gate requires ≥40% of interviewees confirming temporal agent governance as a top-5 pain AND ≥150 waitlist signups from a cold landing page within 4 weeks.
 
@@ -224,11 +224,11 @@ This hypothesis is falsifiable. It will be disproven if any of the following occ
 
 | Section | Content | What to Measure |
 |---|---|---|
-| **Hero** | Headline: "Your AI agents don't know what time it is." Subhead: "Delta-T Zaman is a temporal command center — set timezone rules for your autonomous agents from your phone." 30-second demo GIF of clock UI. CTA: "Join the waitlist." | Bounce rate, scroll depth, waitlist conversion |
-| **Problem** | Three pain points as cards: (1) "Agents deploy at 2AM" (2) "No kill switch when you sleep" (3) "No undo when you wake up." Each with a one-line description. | Click-through to each card (engagement) |
-| **Solution** | 3 feature blocks mapping to Journeys 1–3: Deploy Gate, Sleep Fence, Undo Slider. Each with a static mockup screenshot. | Time-on-section |
-| **Social proof** | "Built on Cloudflare edge + Undisk MCP. Sub-50ms undo. 330+ global edge locations." Logo bar: Tauri, Cloudflare, Undisk. | Trust signal — reduces bounce |
-| **Pricing** | "$19/mo for indie developers. $49/mo for teams. Free during alpha." | Pricing page view rate, CTA click rate |
+| **Hero** | Headline: "Your AI agents don't know what time it is." Subhead: "Delta-T Zaman is a temporal command center — set timezone-gated deploy rules for your autonomous agents from your macOS menu bar." 30-second demo GIF of clock UI. CTA: "Join the waitlist." | Bounce rate, scroll depth, waitlist conversion |
+| **Problem** | Three pain points as cards: (1) "Agents deploy at 2AM" (2) "No safety rails when you sleep" (3) "No undo when you wake up." Each with a one-line description. | Click-through to each card (engagement) |
+| **Solution** | **MVP feature:** Deploy Gate — one feature block with static mockup. "Set a timezone-gated rule. Your agent obeys it." Below: "Coming soon: Sleep Fence, Undo Slider." | Time-on-section |
+| **Social proof** | "Built on Cloudflare edge + Undisk MCP (our own undo-first workspace). Sub-50ms enforcement. 330+ global edge locations." Logo bar: Tauri, Cloudflare, Undisk. | Trust signal — reduces bounce |
+| **Pricing** | "Free during alpha. Pro pricing coming soon." *(Pricing validation deferred per tradeoff.md r3 — F22 conditional)* | CTA click rate |
 | **Waitlist CTA** | Email capture + 2 optional questions: (1) "How many timezones do you work across?" (2) "What AI coding agent do you use?" | Email captures, question response rate |
 | **Footer** | "Built by [founder name]. Open-source clock component on GitHub." Link to GitHub. | GitHub click-through |
 
@@ -562,7 +562,7 @@ This hypothesis is falsifiable. It will be disproven if any of the following occ
 
 **Key assumptions:**
 - HN viral: 300K impressions → 15K landing page visits → 1,200 installs from HN
-- Community posts generate 500 installs, amplified by Undisk partnership
+- Community posts generate 500 installs, amplified by Undisk ecosystem integration (internal cross-promotion)
 - Open-source clock component reaches GitHub trending → 200 additional installs
 - 40% of installs become active
 - 5% free-to-paid conversion
@@ -587,18 +587,18 @@ This hypothesis is falsifiable. It will be disproven if any of the following occ
 
 ## Pre-Build Validation Checklist
 
-The following must be TRUE before writing production code for the 10-week MVP. Items are ordered by dependency and priority.
+The following must be TRUE before writing production code for the 6-8 week MVP. Items are ordered by dependency and priority.
 
-- [ ] **15+ customer discovery interviews completed** — with ICP-matching developers (solo devs / small teams using AI agents across 3+ timezones). At least 8/15 must rank temporal agent governance as a top-5 pain point. [Source — feasibility.md: Required mitigations #4; icp.md: Verification Needed]
+- [ ] **15+ customer discovery interviews completed** — with ICP-matching developers (solo devs / small teams using AI agents across 3+ timezones). At least 8/15 must rank temporal agent governance as a top-5 pain point. [Source — feasibility.md r3: Required mitigations; icp.md: Verification Needed]
 - [ ] **Problem validation signal positive** — ≥53% of interviewees confirm the pain unprompted. If <33% confirm, PIVOT. [Source — this artifact: Success/Failure Criteria, Signal 1]
-- [ ] **Prototype usability test passed** — ≥6/10 ICP testers complete the "set a deploy gate" task in the Figma prototype without guidance. Clock-as-UI paradigm is accepted. [Source — feasibility.md: "Proceed if: at least 6/10 prototype testers find the clock-as-governance-UI intuitive"]
+- [ ] **Prototype usability test passed** — ≥6/10 ICP testers complete the "set a deploy gate" task in the Figma prototype without guidance. Clock-as-UI paradigm is accepted. [Source — feasibility.md r3: "Proceed if: at least 6/10 prototype testers find the clock-as-governance-UI intuitive"]
 - [ ] **≥150 waitlist signups** — from organic traffic on the landing page within 4 weeks. Validates demand beyond interview subjects. [Source — this artifact: Smoke Test Design]
 - [ ] **≥3 firm pricing commitments** — interviewees who say "yes, I would pay $19/mo for this today." Van Westendorp median acceptable price ≥$15/mo. [Source — this artifact: Signal 3]
-- [ ] **Undisk partnership confirmed** — Direct communication with Undisk team confirming: (a) API stability commitment for `set_policy`, `restore_version`, `workspace_checkpoint` tools, (b) no plans to build competing mobile governance UI, (c) willingness to co-market or list Delta-T as an ecosystem partner. [Source — feasibility.md: Required mitigations #3; Risk R1: Undisk single-vendor dependency]
-- [ ] **Tauri iOS physical device build confirmed** — A minimal Tauri 2.x app running on a physical iPhone (not just simulator). WebView renders, `fetch()` to external endpoint works, push notifications are received. This is the Week 1 gate. [Source — feasibility.md: Required mitigations #2; Risk R10: Tauri mobile maturity]
-- [ ] **Mobile-first preference validated** — ≥53% of interviewees prefer controlling agent governance from their phone over their laptop. If <33% prefer mobile, pivot USP to "desktop + mobile" rather than "mobile-first." [Source — usp.md: Confidence Limiter #2]
-- [ ] **Apple Developer account active** — $99/yr Apple Developer Program enrollment confirmed. Provisioning profile generated. TestFlight distribution capability verified. [Source — feasibility.md: iOS App Store distribution]
-- [ ] **Founder runway confirmed** — ≥6 months of living expenses available, plus $200 budgeted for pre-launch infrastructure and marketing. [Source — feasibility.md: Solo developer runway — "$100–200 total infrastructure spend"]
+- [x] **~~Undisk partnership confirmed~~** — **PRE-SATISFIED.** The Delta-T team IS the Undisk team. API stability, roadmap alignment, and co-marketing are internally controlled. No external partnership needed. [Source — critic-report.md r3: F2 ~0%; moat.md r3: vertical integration]
+- [ ] **Tauri macOS menu bar build confirmed** — A minimal Tauri 2.x macOS app running as a menu bar widget. WebView renders, `fetch()` to Cloudflare Worker works, system tray icon displays. This is the Week 1 gate. [Source — feasibility.md r3; tradeoff.md r3: macOS desktop]
+- [ ] **~~Mobile-first preference validated~~** — **DEFERRED TO PHASE 2.** MVP is macOS desktop per tradeoff.md r3. Mobile preference validation will gate Phase 2 mobile build, not MVP. [Source — tradeoff.md r3: "Everything else — iOS, Android — is cut"]
+- [ ] **~~Apple Developer account active~~** — **DEFERRED TO PHASE 2.** MVP distributes via direct download / Homebrew. Apple Developer account needed only for Phase 2 iOS build. [Source — tradeoff.md r3]
+- [ ] **Founder runway confirmed** — ≥6 months of living expenses available, plus $200 budgeted for pre-launch infrastructure and marketing. [Source — feasibility.md r3: Solo developer runway]
 
 ---
 
@@ -616,17 +616,17 @@ Community sizes and post reach estimates (HN impressions, Reddit views, AI commu
 
 Recruiting interviewees from X, Indie Hackers, and AI communities introduces selection bias: these developers are more likely to be early adopters, more AI-savvy, and more receptive to novel tools than the general developer population. Interview results may overstate demand. Mitigation: include at least 3 interviewees recruited through personal network (not self-selected from communities) to diversify the sample. [Model-sourced]
 
-### 4. Mobile-First Demand Is Unvalidated (Impact: Medium-High)
+### 4. Desktop-First Positioning Needs Validation (Impact: Medium)
 
-The entire go-to-market strategy assumes developers want mobile-first governance, but this is the USP's highest-risk claim. PagerDuty and Datadog mobile apps prove developers *monitor* from phones, but *write-capable governance* from mobile is unprecedented. If interviews reveal strong desktop preference, the launch strategy, channel priorities, and messaging all need revision. [Source — usp.md: Confidence Limiter #2; icp.md: Pain #5]
+The MVP ships as a macOS menu bar app per tradeoff.md r3. If interviews reveal strong mobile preference (ICP Pain #5), the desktop-first approach may limit initial adoption. However, per tradeoff.md r3, this is a deliberate de-risking decision: ship on stable platform first, validate the core hypothesis, then expand to mobile in Phase 2. PagerDuty and Datadog mobile apps prove developers *monitor* from phones, but *write-capable governance* from mobile is unprecedented and should not block MVP. [Source — tradeoff.md r3: macOS decision rationale; usp.md r3: Confidence Limiter #2]
 
-### 5. Undisk Ecosystem Size Is Unknown (Impact: Medium)
+### 5. Undisk Ecosystem Size Is an Internal Growth Metric (Impact: Low)
 
-The MCP/Undisk channel is rated P0, but the actual number of developers actively using Undisk MCP workspaces is unknown. If the ecosystem is <1,000 active users, this "perfect fit" channel delivers very few installs. The broader MCP ecosystem is growing but still nascent. [Model-sourced — no public Undisk user counts available]
+The MCP/Undisk channel is rated P0. Since the Delta-T team IS the Undisk team, ecosystem growth is an internal metric the team can influence. The broader MCP ecosystem is growing rapidly. Undisk's existing user base provides a warm launch audience for Delta-T. [Source — moat.md r3: vertical integration; Undisk is internal]
 
-### 6. Pricing Sensitivity to IAP Routing (Impact: Low-Medium)
+### 6. Pricing Sensitivity (Impact: Low-Medium)
 
-The $19/mo pricing assumes web checkout (Stripe) to avoid Apple's 30% IAP cut. If Apple requires IAP for in-app subscription management, the effective price to maintain margin would be ~$25/mo, which may exceed the ICP's willingness to pay. The Van Westendorp test in interviews should stress-test the $25 price point as well. [Source — feasibility.md: Risk R6]
+The $19/mo pricing is deferred from MVP per tradeoff.md r3 (F22: conditional). MVP is free during alpha. Pricing validation will occur during the alpha period via willingness-to-pay interviews and Van Westendorp analysis. Mac distribution avoids Apple's 30% IAP cut entirely. [Source — tradeoff.md r3: pricing CUT from MVP]
 
 ---
 

@@ -45,13 +45,15 @@ Every classification references the ICP ("Agentic Timezone Juggler" — solo/ind
 
 ---
 
-### S2: Persistent menu bar / widget presence (from Dato)
+### S2: Persistent menu bar / widget presence (from Dato) — ⚡ PROMOTED TO CORE per tradeoff.md r3
 
-**What it is**: A timezone clock that lives permanently in the macOS menu bar or iOS widget, always visible without opening an app.
+**What it is**: A timezone clock that lives permanently in the macOS menu bar, always visible without opening an app.
 
-**Why steal it**: The ICP's timezone needs are "persistent background + burst interaction" (per ICP behavioral pattern). Dato proved that a persistent clock drives daily utility. The world clock is Delta-T's trojan horse — the always-on utility that justifies the app's presence on the user's device. [Verified — Dato's menu bar UX is cited in App Store reviews as its #1 feature]
+**[REVISED r3]:** Originally classified as Steal. tradeoff.md r3 selected the macOS menu bar app as THE primary product form factor for MVP. S2 is no longer a Steal feature — it IS the product. The menu bar widget is the control surface for Deploy Gate rules.
 
-**ICP justification**: Per ICP usage pattern "persistent background + burst interaction" — the clock runs always; the mobile app is opened in bursts. An iOS widget that shows current times across configured zones + next sleep fence activation is zero-friction ambient awareness.
+**Why it's core**: The ICP's timezone needs are "persistent background + burst interaction" (per ICP behavioral pattern). Dato proved that a persistent clock drives daily utility. The world clock is Delta-T's trojan horse — the always-on utility that justifies the app's presence on the user's device. [Verified — Dato's menu bar UX is cited in App Store reviews as its #1 feature]
+
+**ICP justification**: Per ICP usage pattern "persistent background + burst interaction" — the clock runs always; rule management is accessed via click. Mobile widget (iOS/Android) is a Phase 2 expansion of this same pattern.
 
 ---
 

@@ -8,7 +8,7 @@ artifact_meta:
     - ".specify/artifacts/phase-1/steal-differentiate-ignore.md"
     - ".specify/artifacts/phase-1/icp.md"
   stale_after: "on_input_change"
-  revision: 2
+  revision: 3
   quality_scores:
     specificity: 4
     actionability: 4
@@ -31,7 +31,7 @@ The old USP positioned Delta-T as a **timezone utility** — a better version of
 
 1. **Scope expansion.** The product evolved from a desktop clock to a three-layer architecture: iOS mobile app + Cloudflare KV/D1 edge state + Undisk MCP agent governance. The old USP describes only the display layer and ignores the governance and infrastructure layers entirely. [Source — steal-differentiate-ignore.md: 7 differentiation features are all governance/infrastructure, not display]
 
-2. **Platform shift.** The old USP claims "native desktop" as the value. The repositioned product is mobile-first (iOS), with the phone as the primary control plane. Desktop persistence (menu bar widget) is a Steal feature (S2), not the USP itself. [Source — icp.md: ICP pain point #5: "There's no mobile control plane for my dev infrastructure"]
+2. **Platform shift.** The old USP claims "native desktop" as the value. The repositioned product uses a macOS menu bar app as the primary control plane, with mobile (iOS/Android) deferred to Phase 2 per tradeoff.md r3. The menu bar widget — previously classified as Steal (S2) — has been promoted to Core. [Source — tradeoff.md r3: "Ship a macOS menu bar app"; steal-differentiate-ignore.md S2 reclassified to Core]
 
 3. **Category mismatch.** "World clock with time slider" competes in the consumer timezone utility category (Dato $14, World Time Buddy freemium, Every Time Zone free). The repositioned product competes in **developer agent governance** — an unoccupied category with no direct competitor. Claiming a timezone USP surrenders the category-creation opportunity. [Source — competitor-matrix.md: "No existing tool lets a developer set timezone-gated rules for autonomous AI agents from a mobile interface"]
 
@@ -43,7 +43,9 @@ The old USP positioned Delta-T as a **timezone utility** — a better version of
 
 ## Revised USP
 
-> **Delta-T Zaman is the only mobile-first temporal governance layer that lets a developer set timezone-gated execution rules, circadian kill-switches, and workspace-level undo for autonomous AI agents — controlled entirely from a clock interface on their phone.**
+> **Delta-T Zaman is the only temporal governance layer that lets a developer set timezone-gated execution rules for autonomous AI agents — controlled from a persistent macOS menu bar clock, enforced at the edge via Cloudflare, and executed through the team's own Undisk MCP workspace.**
+>
+> *Phase 2 expansion: mobile control plane (iOS/Android), Sleep Fence (circadian kill-switches), and Undo Slider (workspace-level time-travel). [Source — tradeoff.md r3: "Everything else is cut until the core deploy-gate hypothesis has a data-backed answer."]*
 
 ---
 
@@ -51,13 +53,13 @@ The old USP positioned Delta-T as a **timezone utility** — a better version of
 
 The USP is valid only as long as all three of the following remain true. If any criterion is disproven, the USP must be revised.
 
-### Criterion 1: No competitor offers timezone-gated governance for AI agents from a mobile interface
+### Criterion 1: No competitor offers timezone-gated governance for AI agents from a persistent desktop interface
 
-**Current status: TRUE** [Source — competitor-matrix.md: comprehensive review of 15 competitors; "Does ANY existing tool let a developer set timezone-gated rules for autonomous AI agents from a mobile interface? Answer: NO."]
+**Current status: TRUE** [Source — competitor-matrix.md: comprehensive review of 15 competitors; no existing tool lets a developer set timezone-gated rules for autonomous AI agents from a dedicated desktop or mobile interface.]
 
-**Would be falsified if:** Temporal.io, Inngest, or any orchestration platform ships a native mobile app with constraint-window semantics (not just cron triggers) applied to MCP-connected agents.
+**Would be falsified if:** Temporal.io, Inngest, or any orchestration platform ships a dedicated desktop/mobile app with constraint-window semantics (not just cron triggers) applied to MCP-connected agents.
 
-### Criterion 2: No competitor combines temporal undo (workspace-level rollback) with mobile control
+### Criterion 2: No competitor combines temporal undo (workspace-level rollback) with a temporal governance UI
 
 **Current status: TRUE** [Source — competitor-matrix.md: Temporal.io has workflow replay but not workspace undo; Undisk has workspace undo but no mobile UI; Git has per-commit revert but no temporal scrubbing]
 
@@ -142,12 +144,12 @@ Every claim in the USP is grounded in upstream artifact data:
 
 | USP Claim | Supporting Evidence | Source |
 |---|---|---|
-| "only mobile-first" | Zero orchestration competitors (Temporal, Inngest, Trigger.dev, Windmill, n8n, Retool) offer native mobile apps. Linggen (P2P agent phone access, 2026) lacks governance. | competitor-matrix.md: Mobile control interface row — all ❌ except Retool 🟡 (builds mobile apps, not self-control) |
+| "only temporal governance layer" | Zero orchestration competitors (Temporal, Inngest, Trigger.dev, Windmill, n8n, Retool) offer dedicated temporal governance UIs. Linggen (P2P agent phone access, 2026) lacks governance. | competitor-matrix.md: Temporal governance interface row — all ❌ |
 | "temporal governance layer" | No competitor applies timezone rules as execution constraints (constraint-window semantics). All use point-in-time cron triggers. | steal-differentiate-ignore.md D1: "Transform scheduling from a trigger into a constraint" |
 | "timezone-gated execution rules" | Temporal/Inngest support IANA TZ strings in cron, but this schedules starts, not constrains windows. | competitor-matrix.md: Timezone-gated scheduling row — all 🟡 (cron TZ) vs. Delta-T ✅ (governance windows) |
 | "circadian kill-switches" | Temporal's pause/resume requires imperative signals per-invocation. No competitor has declarative recurring sleep schedules. | steal-differentiate-ignore.md D4: "Temporal's signals are imperative; Delta-T's sleep fence is declarative" |
 | "workspace-level undo" | Temporal has workflow replay. Git has per-commit revert. Undisk has API-level restore. None combine visual timeline + mobile + workspace checkpoint restore. | competitor-matrix.md: Undo/rollback row; steal-differentiate-ignore.md D3 comparison table |
-| "controlled from a clock interface on their phone" | Mobile MCP clients are emergent (SystemPrompt.io, MCP Apps). None are governance-focused. None use a clock as the primary UI paradigm. | competitor-matrix.md: Market Gaps #2 and #3 |
+| "controlled from a macOS menu bar clock" | No competitor provides a persistent desktop clock interface for governance. Menu bar + Cloudflare edge enforcement means no browser needed. Mobile control (Phase 2) builds on same edge API. | competitor-matrix.md: Market Gaps #2 and #3; tradeoff.md r3: macOS menu bar decision |
 
 ### Gap Confirmation
 
@@ -158,7 +160,7 @@ The competitor-matrix.md identifies four isolated capabilities that no single pr
 3. Cloudflare → edge state propagation, no agent orchestration
 4. World clock apps → timezone awareness, no developer infrastructure
 
-**Delta-T is the assembly.** The USP claims this assembly as the unique value. [Source — competitor-matrix.md: "The pieces exist in isolation… nobody has assembled them into a mobile-first temporal command center for agent governance."]
+**Delta-T is the assembly.** The USP claims this assembly as the unique value — now delivered via a macOS desktop menu bar app (MVP), with mobile control as Phase 2. [Source — competitor-matrix.md: "The pieces exist in isolation…"; tradeoff.md r3: macOS-first strategy]
 
 ---
 
@@ -168,7 +170,7 @@ The competitor-matrix.md identifies four isolated capabilities that no single pr
 
 > "Can any competitor's name replace Delta-T in the USP and it still be true?"
 
-**USP under test:** "[Competitor] is the only mobile-first temporal governance layer that lets a developer set timezone-gated execution rules, circadian kill-switches, and workspace-level undo for autonomous AI agents — controlled entirely from a clock interface on their phone."
+**USP under test:** "[Competitor] is the only temporal governance layer that lets a developer set timezone-gated execution rules for autonomous AI agents — controlled from a persistent macOS menu bar clock, enforced at the edge via Cloudflare, and executed through the team's own Undisk MCP workspace."
 
 | Competitor | Swap Valid? | Reason |
 |---|---|---|
@@ -200,8 +202,8 @@ The competitor-matrix.md identifies four isolated capabilities that no single pr
 |---|---|
 | "timezone-gated execution rules" | → "My agents won't deploy at 2 AM Tokyo time." Addresses ICP Pain #1: "My agents don't know what time it is." [icp.md] |
 | "circadian kill-switches" | → "I can sleep knowing agents are paused." Addresses ICP Pain #2: "I can't sleep because my agents might break things." [icp.md] |
-| "workspace-level undo" | → "I wake up, see the damage, undo it in 30 seconds from my phone." Addresses ICP Pain #4: "I have no temporal audit trail for my agents." [icp.md] |
-| "controlled from a clock interface on their phone" | → "I don't need to open my laptop." Addresses ICP Pain #5: "There's no mobile control plane for my dev infrastructure." [icp.md] |
+| "workspace-level undo" | → "I wake up, see the damage, undo it in 30 seconds from my desktop." Addresses ICP Pain #4: "I have no temporal audit trail for my agents." [icp.md] |
+| "controlled from a macOS menu bar clock" | → "It's always visible, always one click away." Addresses developer preference for persistent desktop tools. Mobile control (Phase 2) addresses ICP Pain #5. [icp.md; tradeoff.md r3] |
 
 **Result: PASS** — Every clause maps to a documented ICP pain point. The USP is not feature-listing; it articulates "what this means for you."
 
@@ -209,7 +211,7 @@ The competitor-matrix.md identifies four isolated capabilities that no single pr
 
 > "Is the negation of the USP something a competitor would claim?"
 
-**Negation:** "We are NOT a mobile-first temporal governance layer. We do NOT let developers set timezone-gated execution rules, circadian kill-switches, or workspace-level undo from a phone."
+**Negation:** "We are NOT a temporal governance layer. We do NOT let developers set timezone-gated execution rules from a desktop clock interface."
 
 Would any competitor claim this? **No.** No competitor positions itself by *rejecting* temporal governance from mobile. Temporal.io would say "We are the most reliable workflow orchestration platform" — a completely orthogonal claim. Dato would say "We are the best macOS clock" — a different category entirely.
 
@@ -291,13 +293,15 @@ The following factors constrain confidence in this USP and could require revisio
 
 "Temporal governance for AI agents" is an invented category. If the ICP does not recognize timezone-gated agent governance as a problem worth paying for, the entire USP is addressing a non-market. The 29% trust figure for AI outputs [icp.md, Verified — Stack Overflow 2025] suggests demand exists, but willingness-to-pay for *temporal* governance specifically is unvalidated. [Model-sourced]
 
-### 2. Mobile Control Plane Demand (Impact: Medium)
+### 2. Desktop-First vs Mobile Demand (Impact: Medium)
 
-The USP emphasizes "from their phone." If developers prefer laptop-based control (opening a web dashboard when needed), the mobile-first positioning may be a liability rather than an advantage. The ICP pain point #5 cites PagerDuty/Datadog mobile as precedent, but those are read-only monitoring, not write-capable governance. Write governance from mobile is unvalidated. [Source — icp.md: "Mobile MCP clients are just emerging"]
+The USP now emphasizes a macOS menu bar app as the primary control plane. If developers prefer mobile control (e.g., setting rules from their phone while away from their desk), the desktop-first positioning may limit initial adoption. Mobile control is planned for Phase 2. The ICP pain point #5 cites PagerDuty/Datadog mobile as precedent for mobile developer tools. Phase 2 validation will determine mobile priority. [Source — icp.md: "Mobile MCP clients are just emerging"; tradeoff.md r3: macOS desktop decision]
 
-### 3. Undisk Dependency (Impact: Medium-High)
+### 3. Undisk Vertical Integration (Impact: LOW — formerly Medium-High)
 
-The USP's "workspace-level undo" depends entirely on Undisk's MCP tools. If Undisk changes its API, deprecates tools, or becomes a competitor, the USP's undo claim breaks. This is a single-vendor dependency for a core USP pillar. [Model-sourced]
+~~The USP's "workspace-level undo" depends entirely on Undisk's MCP tools. If Undisk changes its API, deprecates tools, or becomes a competitor, the USP's undo claim breaks.~~
+
+**[REVISED r3]:** The Delta-T team IS the Undisk team. Undisk is an internal tool, not a third-party vendor. API stability, roadmap alignment, and co-marketing are controlled by the same team. The "single-vendor dependency" risk is ~0%. Instead, Undisk ownership is the **primary competitive moat** — competitors must build their own MCP-compatible versioned workspace from scratch. [Source — critic-report.md r3: F2 ~0%; moat.md r3: vertical integration moat durability 5/5]
 
 ### 4. Clock-as-UI Legibility (Impact: Medium)
 

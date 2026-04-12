@@ -9,7 +9,7 @@ artifact_meta:
     - ".specify/artifacts/undisk-docs.md"
     - "deep-research-report.md"
   stale_after: "on_input_change"
-  revision: 2
+  revision: 3
   quality_scores:
     specificity: 5
     actionability: 4
@@ -22,16 +22,16 @@ artifact_meta:
 
 ## Executive Summary
 
-Delta-T Zaman is technically feasible using Tauri 2.10.x (mobile verified), Cloudflare KV/D1 (sub-10ms reads documented), and Undisk MCP (25 tools with sub-50ms undo) — all three core journeys map cleanly to existing API surfaces with no blocking gaps. Financial feasibility is strong: infrastructure costs stay under $50/mo at 1K users, reaching break-even at ~85 paying customers on a $19/mo tier. **Verdict: YELLOW — proceed with mitigations** for three medium-high risks: Undisk single-vendor dependency, unvalidated clock-as-governance UX, and iOS background execution constraints.
+Delta-T Zaman is technically feasible using Tauri 2.10.x (desktop stable, mobile Phase 2), Cloudflare KV/D1 (sub-10ms reads documented), and Undisk MCP (25 tools with sub-50ms undo — internal tool, not a third-party dependency). The MVP scope is **Deploy Gate only** (Journey 1), with Sleep Fence and Undo Slider deferred to Phase 2 per tradeoff.md r3. Financial feasibility is strong: infrastructure costs stay under $15/mo at 1K users for a single-journey MVP. **Verdict: GREEN — proceed** with one remaining medium risk: unvalidated clock-as-governance UX. Timeline: **6-8 weeks** at 15-20 hrs/week.
 
 ---
 
 ## Technical Feasibility
 
-### A. Tauri 2.x Mobile (iOS + Android)
+### A. Tauri 2.x Desktop (macOS Primary, Mobile Phase 2)
 
-**Can Tauri 2.x build native iOS and Android apps?**
-Yes. Tauri 2.x added mobile support targeting iOS and Android via native WebViews (WKWebView on iOS, Android WebView). The developer's local toolchain is verified: Rust 1.94.1 with 7 mobile targets, Xcode 26.3, Android Studio + SDK, and Tauri CLI 2.10.1. The deep-research-report.md confirms Tauri can generate Xcode and Android Studio projects, with the caveat that mobile support is still labeled "beta/experimental" upstream. [Source — deep-research-report.md: "Tauri 2.x added experimental mobile support"; verified local toolchain]
+**Can Tauri 2.x build a macOS menu bar app?**
+Yes. Tauri 2.x has mature desktop support for macOS, Windows, and Linux. The developer's local toolchain is verified: Rust 1.94.1 with 7 mobile targets, Xcode 26.3, Android Studio + SDK, and Tauri CLI 2.10.1. Per tradeoff.md r3, the MVP ships as a **macOS menu bar app** — Tauri desktop is stable and production-ready. Mobile (iOS/Android via Tauri mobile) is deferred to Phase 2 due to beta status. [Source — deep-research-report.md: Tauri desktop is stable; tradeoff.md r3: "macOS menu bar app"]
 
 **Can a Tauri app make HTTP/WebSocket calls to Cloudflare Workers and Undisk MCP?**
 Yes. Tauri's WebView supports standard `fetch()` and WebSocket APIs. CSP configuration in `tauri.conf.json` must whitelist `connect-src` for `https://mcp.undisk.app` and the Cloudflare Worker domain. iOS WKWebView supports `wss://` natively. No plugin required. [Source — deep-research-report.md: CSP configuration section; Undisk docs: WebSocket endpoint `wss://mcp.undisk.app/ws`]
@@ -126,7 +126,7 @@ User taps TYO block → sets "Unlock Undisk Deploy at TYO 09:00."
 
 **Alternative approach (lighter-weight):** Use `workspace_collaborate` → `claim_lock` with glob pattern `production/**` and TTL matching the lock duration. Locks auto-expire, which aligns with time-based unlocking. However, max TTL is 3600s (1 hour), which is insufficient for overnight locks. **`set_policy` is the correct mechanism for multi-hour governance windows.** [Source — undisk-docs.md: `set_policy` pathAcls documentation; `workspace_collaborate` claim_lock TTL max 3600]
 
-**Journey 2: Agentic Sleep Fence**
+**Journey 2: Agentic Sleep Fence** *(Phase 2 — deferred per tradeoff.md r3)*
 
 User sets 11PM-7AM CDT local pause.
 
@@ -140,7 +140,7 @@ User sets 11PM-7AM CDT local pause.
 
 **Key detail:** Cloudflare Cron Triggers support timezone-aware scheduling natively (`crons = ["0 23 * * * America/Chicago"]` in `wrangler.toml`). This eliminates the need for the mobile app to be online at fence transitions. The Worker is the enforcement point, not the phone. [Source — undisk-docs.md: `set_policy` mode "replace" and "merge"; Cloudflare Cron Triggers docs]
 
-**Journey 3: Undo Slider**
+**Journey 3: Undo Slider** *(Phase 2 — deferred per tradeoff.md r3)*
 
 User scrubs timeline on phone → sees commit history → taps "REVERT TO INTENT."
 
@@ -164,26 +164,28 @@ User scrubs timeline on phone → sees commit history → taps "REVERT TO INTENT
 | No agent-level rate limiting (only workspace-level) | Low | Agent identification via `X-Agent-Name` header allows Worker-side per-agent throttling before forwarding to Undisk |
 | No real-time event stream (SSE/WebSocket push for changes) | Medium | Would enable live timeline updates on mobile. Currently requires polling. Feature request candidate for Undisk roadmap. |
 
-**Risk level: MEDIUM**
+**Risk level: LOW**
 
-Undisk's API surface covers all three journeys without requiring custom server-side code beyond the Cloudflare Worker middleware. The primary risks are: (1) single-vendor dependency on Undisk (no alternative MCP workspace with equivalent undo semantics exists), (2) lack of push notifications requiring polling-based architecture for timeline updates, and (3) `set_policy` being workspace-wide rather than agent-specific for the sleep fence (all agents are affected, not just the user's agents — acceptable for single-developer MVP but needs scoping for multi-agent teams).
+Undisk's API surface covers all three journeys without requiring custom server-side code beyond the Cloudflare Worker middleware. **[REVISED r3]:** Undisk is an internal tool owned by the Delta-T team, not a third-party dependency. The "single-vendor dependency" risk (R1) is eliminated — see critic-report.md r3 (F2: ~0%) and moat.md r3 (vertical integration moat). The remaining technical risks are: (1) lack of push notifications requiring polling-based architecture for timeline updates (Phase 2), and (2) `set_policy` being workspace-wide rather than agent-specific (acceptable for single-developer MVP).
 
 ---
 
 ### D. MCP Protocol Layer
 
-**Data flow: Mobile → Cloudflare → Undisk Agent**
+**Data flow: macOS Menu Bar → Cloudflare → Undisk Agent**
+
+*Note: Diagram reflects full vision (all 3 journeys). MVP implements Deploy Gate only (F1+F2+F4+F5+F6+F7+F9 per tradeoff.md r3).*
 
 ```
 ┌──────────────┐    HTTPS/REST     ┌──────────────────┐    MCP (HTTP)    ┌──────────────┐
 │              │ ───────────────→  │                  │ ──────────────→  │              │
-│  Tauri iOS   │   Rule CRUD API   │  Cloudflare      │   set_policy     │   Undisk     │
-│  Mobile App  │ ←───────────────  │  Worker          │   claim_lock     │   MCP        │
+│  Tauri macOS │   Rule CRUD API   │  Cloudflare      │   set_policy     │   Undisk     │
+│  Menu Bar    │ ←───────────────  │  Worker          │   claim_lock     │   MCP        │
 │              │   Rule state       │  (KV + D1)       │   restore_ver    │   Workspace  │
 │              │                   │                  │ ←──────────────  │              │
-│  Clock UI    │   Push/poll       │  Cron Triggers   │   Responses      │   25 Tools   │
-│  Rule Editor │ ←───────────────  │  (Sleep Fence)   │                  │              │
-│  Undo Slider │                   │                  │                  │              │
+│  Clock UI    │   Push/poll       │  Cron Triggers   │   Responses      │   (Internal) │
+│  Rule Editor │ ←───────────────  │  (Phase 2)       │                  │   25 Tools   │
+│              │                   │                  │                  │              │
 └──────────────┘                   └──────────────────┘                  └──────────────┘
        ↑                                    ↑                                   ↑
    User intent                      Rule enforcement                    Agent execution
@@ -204,12 +206,18 @@ The architecture uses MCP as designed — the Worker calls Undisk MCP tools to m
 
 ### E. Cross-Platform Considerations
 
-**iOS:**
+**macOS (MVP — Primary):**
+- Menu bar app via Tauri desktop (stable, production-ready). Always-visible clock + rule editor.
+- System tray integration with live time display. Click to expand rule management.
+- No App Store needed for initial distribution (direct download / Homebrew). Mac App Store is a Phase 2 option.
+- Notifications via Tauri notification plugin (local notifications for rule triggers).
+
+**iOS (Phase 2):**
 - Background refresh: `BGTaskScheduler` for periodic rule sync (limited to ~30s execution windows, OS-controlled scheduling). Not sufficient for real-time rule enforcement — but enforcement lives on Cloudflare, not the phone. The phone is a control plane, not an enforcement point. [Source — deep-research-report.md: iOS background constraints]
 - Push notifications: APNs for rule-trigger confirmations ("Your TYO deploy gate unlocked at 09:00"). Requires Apple Developer account + APNs certificate. Tauri's notification plugin supports local notifications natively. [Source — deep-research-report.md: notification plugin]
-- App Store: WebView-based apps with Rust backend are permitted. Delta-T's native features (notifications, background sync, local storage) provide sufficient functionality beyond a web wrapper. [Source — Apple Review Guidelines §4.2]
+- App Store: WebView-based apps with Rust backend are permitted. [Source — Apple Review Guidelines §4.2]
 
-**Android:**
+**Android (Phase 2):**
 - Persistent service: Android WorkManager for rule sync. More permissive than iOS — can run periodic tasks every 15 minutes minimum. [Source — deep-research-report.md: schedule-task plugin]
 - No system tray on mobile — the clock UI is the main app interface, not a widget. Android home screen widgets (via Tauri custom plugin or native Kotlin bridge) are Phase 2.
 - Push: FCM for rule-trigger notifications. Well-supported.
@@ -310,11 +318,12 @@ iOS background constraints are the main concern. However, since enforcement is s
 | Feature | MVP (v0.1) | Phase 2 (v0.2-0.3) |
 |---------|-----------|-------------------|
 | Journey 1: Deploy Gate | ✅ | Enhanced with multi-workspace support |
-| Journey 2: Sleep Fence | ❌ Cut (Cron Triggers can be Phase 2) | ✅ Cloudflare Cron + automatic pause/resume |
-| Journey 3: Undo Slider | 🟡 Basic (list + single restore) | ✅ Full visual timeline scrubber with diff preview |
-| iOS app | ✅ TestFlight | ✅ App Store release |
+| Journey 2: Sleep Fence | ❌ Cut per tradeoff.md r3 | ✅ Cloudflare Cron + automatic pause/resume |
+| Journey 3: Undo Slider | ❌ Cut per tradeoff.md r3 | ✅ Full visual timeline scrubber with diff preview |
+| macOS menu bar app | ✅ Primary | ✅ Mac App Store + Homebrew |
+| iOS app | ❌ Cut per tradeoff.md r3 | ✅ TestFlight → App Store |
 | Android app | ❌ Cut | ✅ Phase 2 |
-| Desktop (macOS) | ✅ Menu bar widget | ✅ Windows + Linux |
+| Windows + Linux | ❌ Cut | ✅ Phase 2 (Tauri desktop is cross-platform) |
 | Brutalist clock UI | 🟡 Functional (not final design) | ✅ Full design language |
 | Multi-workspace | ❌ Cut | ✅ Phase 2 |
 | Team/org support | ❌ Cut | ✅ Phase 3 |
@@ -326,53 +335,53 @@ iOS background constraints are the main concern. However, since enforcement is s
 
 | # | Risk | Category | Likelihood | Impact | Mitigation |
 |---|------|----------|-----------|--------|------------|
-| R1 | **Undisk single-vendor dependency** — Undisk changes API, raises prices, or becomes a competitor | Technical / Business | Medium | High | Abstract Undisk calls behind a workspace interface. Monitor Undisk roadmap. Maintain relationship with Undisk team. Evaluate alternative MCP workspaces (none exist today but may emerge). [Source — usp.md: Confidence Limiter #3] |
+| R1 | ~~**Undisk single-vendor dependency**~~ **ELIMINATED** | Technical / Business | ~~Medium~~ N/A | ~~High~~ N/A | **[REVISED r3]:** The Delta-T team IS the Undisk team. Undisk is an internal tool. API stability, roadmap, and co-marketing are fully controlled. This risk is ~0%. [Source — critic-report.md r3: F2 ~0%; moat.md r3: vertical integration moat] |
 | R2 | **Clock-as-UI unvalidated** — Developers find the clock metaphor confusing for governance tasks | UX / Market | Medium | High | Build clickable prototype and test with 10+ ICP developers before committing to full build. Prepare fallback to conventional dashboard UI if clock UX tests poorly. [Source — usp.md: Confidence Limiter #4] |
-| R3 | **iOS background execution constraints** — Rule sync fails silently, user sees stale state on phone | Technical | Medium | Medium | Enforcement is server-side (Cloudflare), so stale mobile UI doesn't affect actual governance. Add "last synced" indicator. Use APNs push to trigger foreground sync. Accept that mobile is a control plane, not enforcement plane. [Source — deep-research-report.md: background throttling] |
+| R3 | ~~**iOS background execution constraints**~~ **ELIMINATED — MVP is macOS desktop** | Technical | ~~Medium~~ N/A | ~~Medium~~ N/A | **[REVISED r3]:** MVP ships as macOS menu bar app per tradeoff.md r3. iOS background constraints are a Phase 2 consideration. macOS has no background execution restrictions for menu bar apps. |
 | R4 | **Category risk — no validated demand** — Developers don't recognize "temporal agent governance" as a problem worth paying for | Market | Medium | High | Validate with 30+ ICP interviews before scaling. Track activation metrics (rule creation within 7 days). Minimum viable signal: 5% of trial users create a governance rule. [Source — usp.md: Confidence Limiter #1; market-map.md: Verification Needed #3] |
 | R5 | **Cloudflare KV eventual consistency** — Rule change takes >60s to propagate, agent acts during window | Technical | Low | Medium | Document propagation delay (typically <60s). For critical rules, Worker can also call Undisk `set_policy` immediately (synchronous enforcement) as a belt-and-suspenders approach. KV is for fast reads; `set_policy` is the authoritative enforcement. [Source — market-map.md: "state change propagates globally in <60 seconds via KV eventual consistency"] |
 | R6 | **Apple IAP requirement** — Apple demands 30% cut on subscription revenue, eroding margins | Legal / Financial | Medium | Medium | Route subscriptions through web checkout (Stripe). Follow "reader app" precedent (like Netflix, Spotify post-2024). If Apple rejects, implement IAP with adjusted pricing ($24.99 Tier A to preserve margin). Legal review before submission. [Model-sourced] |
 | R7 | **MCP spec adds native governance** — MCP 2026+ roadmap includes scheduling/governance primitives | Competitive | Low | Low | Spec-level primitives would be building blocks, not products. Delta-T would implement the spec, gaining validation. Category ownership + UX moat persist. [Source — usp.md: Time Test analysis] |
-| R8 | **Solo developer burnout / velocity** — 10-week MVP timeline slips, competition emerges | Operational | Medium | Medium | Strict scope cuts (Journey 2 + 3 deferred). Use AI coding agents (Cursor, Claude Code) to accelerate. Target 1 platform (iOS + macOS) before cross-platform. Set hard deadline: if no TestFlight build by week 12, re-scope. [Model-sourced] |
+| R8 | **Solo developer burnout / velocity** — 6-8 week MVP timeline slips, competition emerges | Operational | Medium | Medium | Strict scope cuts (Journey 2 + 3 + mobile deferred per tradeoff.md r3). Use AI coding agents (Cursor, Claude Code) to accelerate. Target macOS only at MVP. Set hard deadline: if no working build by week 10, re-scope. [Model-sourced] |
 | R9 | **Undisk free tier insufficient for development** — 1K ops/day and 100MB storage limit development velocity | Technical | Low | Low | Upgrade to Undisk Pro ($29/mo) early in development. The 50K ops/day and 10GB storage cover development + testing. Cost is budgeted in infrastructure model. [Source — undisk-docs.md: pricing table] |
-| R10 | **Tauri mobile maturity** — Tauri mobile has unresolved bugs or performance issues on iOS/Android | Technical | Medium | Medium | Build iOS prototype in Week 1-2 as a validation gate. If Tauri mobile proves unstable, fallback to React Native for mobile + Tauri for desktop. The Cloudflare Worker + Undisk architecture is framework-agnostic. [Source — deep-research-report.md: "mobile support is beta/unstable"] |
+| R10 | **Tauri mobile maturity** *(Phase 2 risk — not MVP)* — Tauri mobile has unresolved bugs or performance issues on iOS/Android | Technical | Medium | Medium | **[REVISED r3]:** MVP is macOS desktop (Tauri desktop is stable). This risk only applies when Phase 2 mobile is built. If Tauri mobile proves unstable at that time, fallback to React Native for mobile. The Cloudflare Worker + Undisk architecture is framework-agnostic. [Source — deep-research-report.md: "mobile support is beta/unstable"] |
 
 ---
 
 ## Verdict
 
-### **YELLOW — Proceed with Mitigations**
+### **GREEN — Proceed**
 
-**Confidence: 0.82**
+**Confidence: 0.88**
 
-The product is technically feasible with no blocking dependencies. All three journeys map to existing API surfaces (Undisk MCP tools, Cloudflare KV/D1, Tauri 2.x). Infrastructure costs are negligible. The MCP ecosystem is growing rapidly, validating the integration channel.
+The product is technically feasible with no blocking dependencies. The MVP scope (Deploy Gate only, macOS menu bar) maps cleanly to existing API surfaces (Undisk MCP tools, Cloudflare KV). Infrastructure costs are negligible. The MCP ecosystem is growing rapidly, validating the integration channel. Undisk is an internal tool (risk eliminated). macOS desktop is a stable platform (risk eliminated).
 
-**Why not GREEN:**
-1. **Undisk dependency (R1)** — A core USP pillar (workspace-level undo) depends entirely on a single third-party service with no alternative. If Undisk's API changes or service degrades, Delta-T's undo journey breaks.
-2. **Unvalidated UX (R2)** — The clock-as-governance-UI has no precedent. Developer acceptance is assumed but unproven. This is the highest product risk.
-3. **Category risk (R4)** — "Temporal agent governance" is an invented category. Willingness-to-pay is unvalidated.
+**Why GREEN (upgraded from YELLOW r2):**
+1. ~~**Undisk dependency (R1)**~~ **ELIMINATED** — Undisk is an internal tool. ~0% risk per critic-report.md r3.
+2. ~~**iOS background execution (R3)**~~ **ELIMINATED** — MVP is macOS desktop per tradeoff.md r3. No background restrictions.
+3. **Unvalidated UX (R2)** — The clock-as-governance-UI has no precedent. Developer acceptance is assumed but unproven. This is the sole remaining medium-high product risk.
+4. **Category risk (R4)** — "Temporal agent governance" is an invented category. Willingness-to-pay is unvalidated. Medium risk, mitigated by Deploy Gate's concrete value proposition.
 
 **Required mitigations before committing full build:**
 1. ☐ Build clickable prototype of clock UI and test with 10+ ICP developers (2 weeks)
-2. ☐ Confirm Undisk API stability via direct communication with Undisk team
-3. ☐ Validate Tauri iOS build on physical device (Week 1 gate)
-4. ☐ Conduct 15+ customer discovery interviews on temporal governance pain points
+2. ☐ Validate Tauri macOS menu bar build with live Cloudflare Worker integration (Week 1 gate)
+3. ☐ Conduct 15+ customer discovery interviews on temporal governance pain points
 
-**Proceed if:** At least 6/10 prototype testers find the clock-as-governance-UI intuitive, AND at least 8/15 interviewees confirm temporal agent governance as a top-5 pain point.
+**Proceed if:** At least 6/10 prototype testers find the clock-as-governance-UI intuitive, AND at least 8/15 interviewees confirm temporal agent governance as a top-5 pain point. *(Note: Undisk partnership confirmation and iOS device validation gates have been removed — Undisk is internal, and MVP is macOS desktop.)*
 
 ---
 
 ## Confidence Limiters
 
-1. **Undisk latency claims are from documentation, not independently measured.** The "8ms restore" and "p50 4ms WebSocket read" figures are from Undisk's own docs. Real-world latency with Delta-T's Worker middleware will add ~30-90ms per hop (Worker processing + Undisk HTTP). Independent benchmarks needed. [Source — undisk-docs.md transport table]
+1. **Undisk latency claims are from internal documentation, not independently measured.** The "8ms restore" and "p50 4ms WebSocket read" figures are from Undisk's docs (which the team authored). Real-world latency with Delta-T's Worker middleware will add ~30-90ms per hop (Worker processing + Undisk HTTP). Independent benchmarks under production load are needed. [Source — undisk-docs.md transport table]
 
-2. **Tauri mobile is "beta/experimental."** The deep-research-report.md and Tauri's own documentation describe mobile support as not yet stable. Plugin gaps exist. A physical-device iOS test in Week 1 is mandatory before committing to the Tauri mobile path. [Source — deep-research-report.md]
+2. **Tauri mobile is "beta/experimental" — but this is a Phase 2 concern.** The deep-research-report.md and Tauri's own documentation describe mobile support as not yet stable. MVP uses Tauri desktop (stable). Mobile validation is deferred. [Source — deep-research-report.md; tradeoff.md r3]
 
-3. **Cost model uses estimated per-user request volumes.** The Cloudflare cost projections assume ~3K requests/user/month. Actual usage patterns are unknown until alpha testing. Costs could be 2-3x higher if the mobile app polls frequently or users interact heavily with the timeline. [Model-sourced]
+3. **Cost model uses estimated per-user request volumes and reflects full 3-journey scope.** The Cloudflare cost projections assume ~3K requests/user/month for all journeys. MVP (Deploy Gate only) will have significantly lower costs — likely under $15/mo at 1K users. Actual usage patterns are unknown until alpha testing. [Model-sourced; tradeoff.md r3: scope cuts]
 
-4. **No competitive intelligence on Undisk's roadmap.** If Undisk builds a mobile UI or governance features, Delta-T's moat narrows significantly. The usp.md rates "Undisk ships temporal rules" as Medium likelihood, Medium impact — but this was written in early 2026 and may be stale. [Source — usp.md: Time Test]
+4. ~~**No competitive intelligence on Undisk's roadmap.**~~ **[REVISED r3]: ELIMINATED.** The Delta-T team IS the Undisk team. Roadmap alignment is guaranteed. Undisk will not build a competing governance UI — that IS Delta-T. [Source — critic-report.md r3; moat.md r3]
 
-5. **iOS App Store approval is not guaranteed.** While developer tools are generally permitted, Apple's review process is unpredictable. The WebView-based architecture and subscription routing strategy have not been tested with Apple Review. [Model-sourced]
+5. **macOS distribution is straightforward — no App Store friction for MVP.** Direct download, Homebrew cask, or GitHub releases. No Apple review needed. Mac App Store is optional for Phase 2. [tradeoff.md r3]
 
 ---
 
