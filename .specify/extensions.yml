@@ -1,0 +1,434 @@
+# Founder OS Pipeline Extension
+# 24-agent product success pipeline for solo founders
+# Registered with Spec Kit via lifecycle hooks
+
+name: "founder-os"
+version: "2.0.0"
+description: "Founder OS Pipeline — 24-agent product success pipeline with dual-mode execution (Pipeline Mode + Loop Mode), brownfield onboarding, and corpus revision"
+
+# Agent registry (24 agents: 4 Phase 0 + 20 pipeline, ordered by phase and execution sequence)
+agents:
+  # Phase 0: Loop, Sketch, Discover & Route (entry points for Loop Mode)
+  - name: "os.loop"
+    phase: 0
+    order: 0
+    description: "Plan-execute-evaluate orchestrator — determines which agent to run next"
+    prerequisites: []
+    outputs:
+      - ".specify/artifacts/loop-state.md"
+    gate: soft
+
+  - name: "os.sketch"
+    phase: 0
+    order: 1
+    description: "Lightweight idea-to-build sketch — zero prerequisites, hypothesis-grade"
+    prerequisites: []
+    outputs:
+      - ".specify/artifacts/sketch.md"
+    gate: soft
+
+  - name: "os.discover"
+    phase: 0
+    order: 2
+    description: "Brownfield codebase scanner — produces architecture profile and improvement opportunities"
+    prerequisites: []
+    outputs:
+      - ".specify/artifacts/codebase-profile.md"
+      - ".specify/artifacts/improvement-opportunities.md"
+    gate: soft
+
+  - name: "speckit.route"
+    phase: 0
+    order: 3
+    description: "Intelligent intake — classifies raw input and outputs an ordered agent execution plan with tailored prompts"
+    prerequisites: []
+    outputs: []  # Produces routing plan in conversation, not a persisted artifact
+    gate: soft
+
+  # Phase 1: Decision & Prioritization (Reality Check)
+  - name: "os.market"
+    phase: 1
+    order: 1
+    description: "Opportunity & Market analysis"
+    prerequisites: []
+    outputs:
+      - ".specify/artifacts/phase-1/market-map.md"
+      - ".specify/artifacts/phase-1/icp.md"
+      - ".specify/artifacts/phase-1/why-now.md"
+    gate: soft  # No prerequisites — soft gate is natural
+
+  - name: "os.competition"
+    phase: 1
+    order: 2
+    description: "Competitive Intelligence & UX teardown"
+    prerequisites:
+      - ".specify/artifacts/phase-1/market-map.md"
+      - ".specify/artifacts/phase-1/icp.md"
+      - ".specify/artifacts/phase-1/why-now.md"
+    outputs:
+      - ".specify/artifacts/phase-1/competitor-matrix.md"
+      - ".specify/artifacts/phase-1/ux-teardown.md"
+      - ".specify/artifacts/phase-1/steal-differentiate-ignore.md"
+    gate: soft
+
+  - name: "os.usp"
+    phase: 1
+    prerequisites:
+      - ".specify/artifacts/phase-1/competitor-matrix.md"
+      - ".specify/artifacts/phase-1/steal-differentiate-ignore.md"
+      - ".specify/artifacts/phase-1/icp.md"
+    outputs:
+      - ".specify/artifacts/phase-1/usp.md"
+    gate: soft
+
+  - name: "os.feasibility"
+    phase: 1
+    prerequisites:
+      - ".specify/artifacts/phase-1/usp.md"
+      - ".specify/artifacts/phase-1/market-map.md"
+    outputs:
+      - ".specify/artifacts/phase-1/feasibility.md"
+    gate: soft
+
+  - name: "os.validate"
+    phase: 1
+    prerequisites:
+      - ".specify/artifacts/phase-1/icp.md"
+      - ".specify/artifacts/phase-1/usp.md"
+      - ".specify/artifacts/phase-1/feasibility.md"
+    outputs:
+      - ".specify/artifacts/phase-1/growth-plan.md"
+    gate: soft
+
+  - name: "os.critic"
+    phase: 1
+    prerequisites:
+      - ".specify/artifacts/phase-1/market-map.md"
+      - ".specify/artifacts/phase-1/icp.md"
+      - ".specify/artifacts/phase-1/why-now.md"
+      - ".specify/artifacts/phase-1/competitor-matrix.md"
+      - ".specify/artifacts/phase-1/ux-teardown.md"
+      - ".specify/artifacts/phase-1/steal-differentiate-ignore.md"
+      - ".specify/artifacts/phase-1/usp.md"
+      - ".specify/artifacts/phase-1/feasibility.md"
+      - ".specify/artifacts/phase-1/growth-plan.md"
+    outputs:
+      - ".specify/artifacts/phase-1/brutal-critique.md"
+    gate: hard  # Only hard-gated agent — shipping without surviving criticism is dangerous
+
+  - name: "os.tradeoff"
+    phase: 1
+    prerequisites:
+      - ".specify/artifacts/phase-1/brutal-critique.md"
+      - ".specify/artifacts/phase-1/feasibility.md"
+      - ".specify/artifacts/phase-1/growth-plan.md"
+    outputs:
+      - ".specify/artifacts/phase-1/tradeoff-matrix.md"
+    gate: soft
+
+  - name: "os.moat"
+    phase: 1
+    prerequisites:
+      - ".specify/artifacts/phase-1/competitor-matrix.md"
+      - ".specify/artifacts/phase-1/usp.md"
+      - ".specify/artifacts/phase-1/growth-plan.md"
+    outputs:
+      - ".specify/artifacts/phase-1/moat.md"
+    gate: soft
+
+  # Phase 2: User Reality & Interface (UX Strategy)
+  - name: "os.persona"
+    phase: 2
+    order: 1
+    description: "Persona simulation & UX stress testing"
+    prerequisites:
+      - ".specify/artifacts/phase-1/market-map.md"
+      - ".specify/artifacts/phase-1/icp.md"
+      - ".specify/artifacts/phase-1/why-now.md"
+      - ".specify/artifacts/phase-1/competitor-matrix.md"
+      - ".specify/artifacts/phase-1/ux-teardown.md"
+      - ".specify/artifacts/phase-1/steal-differentiate-ignore.md"
+      - ".specify/artifacts/phase-1/usp.md"
+      - ".specify/artifacts/phase-1/feasibility.md"
+      - ".specify/artifacts/phase-1/growth-plan.md"
+      - ".specify/artifacts/phase-1/brutal-critique.md"
+      - ".specify/artifacts/phase-1/tradeoff-matrix.md"
+      - ".specify/artifacts/phase-1/moat.md"
+    outputs:
+      - ".specify/artifacts/phase-2/persona-sim.md"
+    gate: soft
+
+  - name: "os.ux-strategy"
+    phase: 2
+    prerequisites:
+      - ".specify/artifacts/phase-2/persona-sim.md"
+      - ".specify/artifacts/phase-1/icp.md"
+      - ".specify/artifacts/phase-1/usp.md"
+      - ".specify/artifacts/phase-1/tradeoff-matrix.md"
+    outputs:
+      - ".specify/artifacts/phase-2/ux-strategy.md"
+    gate: soft
+
+  - name: "os.design"
+    phase: 2
+    order: 3
+    description: "Design tokens & constraints"
+    prerequisites:
+      - ".specify/artifacts/phase-2/ux-strategy.md"
+      - ".specify/artifacts/phase-2/persona-sim.md"
+    outputs:
+      - ".specify/artifacts/phase-2/design-tokens.md"
+      - ".specify/artifacts/phase-2/design-constraints.md"
+    gate: soft
+
+  # Phase 3: Orchestration & Build (Spec Kit Core Integration)
+  - name: "os.audit"
+    phase: 3
+    order: 1
+    description: "Pipeline audit & structural validation"
+    prerequisites: []
+    outputs: []
+    gate: soft
+
+  - name: "os.qa"
+    phase: 3
+    prerequisites:
+      - ".specify/artifacts/phase-1/brutal-critique.md"
+      - ".specify/artifacts/phase-1/feasibility.md"
+      - ".specify/artifacts/phase-2/ux-strategy.md"
+    outputs:
+      - ".specify/artifacts/phase-3/qa-report.md"
+    gate: soft
+
+  - name: "os.safety"
+    phase: 3
+    prerequisites:
+      - ".specify/artifacts/phase-3/qa-report.md"
+    outputs:
+      - ".specify/artifacts/phase-3/trust-safety-report.md"
+    gate: soft
+
+  - name: "os.cross-examine"
+    phase: 3
+    order: 4
+    description: "Full-corpus semantic cross-examination — detects broken decision chains, contradictions, and gaps"
+    prerequisites: []  # Reads whatever exists; no hard prerequisites
+    outputs:
+      - ".specify/artifacts/phase-3/cross-examination-report.md"
+    gate: soft
+
+  - name: "os.revise"
+    phase: 3
+    order: 5
+    description: "Source-agnostic revision — applies structured findings to pipeline artifacts with audit trail"
+    prerequisites:
+      - ".specify/artifacts/phase-3/cross-examination-report.md"
+    outputs:
+      - ".specify/artifacts/phase-3/revision-plan.md"
+      - ".specify/artifacts/phase-3/revision-changelog.md"
+    gate: soft
+
+  # Phase 4: Distribution & Analytics (Launch Loop)
+  - name: "os.launch"
+    phase: 4
+    order: 1
+    description: "Launch kit — channels, content, sequencing"
+    prerequisites:
+      - ".specify/artifacts/phase-1/growth-plan.md"
+      - ".specify/artifacts/phase-1/moat.md"
+      - ".specify/artifacts/phase-2/ux-strategy.md"
+    outputs:
+      - ".specify/artifacts/phase-4/launch-kit.md"
+    gate: soft
+
+  - name: "os.analytics"
+    phase: 4
+    prerequisites:
+      - ".specify/artifacts/phase-4/launch-kit.md"
+    outputs:
+      - ".specify/artifacts/phase-4/analytics-report.md"
+    gate: soft
+
+  - name: "os.simplify"
+    phase: 4
+    prerequisites:
+      - ".specify/artifacts/phase-4/analytics-report.md"
+    outputs:
+      - ".specify/artifacts/phase-4/simplification-plan.md"
+    gate: soft
+
+  - name: "os.iterate"
+    phase: 4
+    prerequisites:
+      - ".specify/artifacts/phase-4/analytics-report.md"
+      - ".specify/artifacts/phase-4/simplification-plan.md"
+    outputs:
+      - ".specify/artifacts/phase-4/iteration-brief.md"
+    gate: soft
+
+
+  # Spec Kit core agents (10 agents: pipeline orchestration and development workflow)
+  - name: "speckit.route"
+    phase: 0
+    order: 3
+    description: "Intelligent intake — classifies raw input and outputs an ordered agent execution plan"
+    prerequisites: []
+    outputs: []
+    gate: soft
+
+  - name: "speckit.specify"
+    phase: null  # Runs after Phase 1+2 pipeline
+    order: 1
+    description: "Create or update feature specification from natural language description"
+    prerequisites: []
+    outputs:
+      - "specs/{feature}/spec.md"
+    gate: hard
+
+  - name: "speckit.clarify"
+    phase: null
+    order: 2
+    description: "Identify underspecified areas and ask targeted clarification questions"
+    prerequisites:
+      - "specs/{feature}/spec.md"
+    outputs:
+      - "specs/{feature}/spec.md"  # Updated in-place
+    gate: soft
+
+  - name: "speckit.plan"
+    phase: null
+    order: 3
+    description: "Generate implementation design and architecture plan"
+    prerequisites:
+      - "specs/{feature}/spec.md"
+    outputs:
+      - "specs/{feature}/plan.md"
+    gate: hard
+
+  - name: "speckit.tasks"
+    phase: null
+    order: 4
+    description: "Decompose plan into actionable, dependency-ordered tasks"
+    prerequisites:
+      - "specs/{feature}/plan.md"
+    outputs:
+      - "specs/{feature}/tasks.md"
+    gate: hard
+
+  - name: "speckit.checklist"
+    phase: null
+    order: 5
+    description: "Generate domain-specific quality checklists"
+    prerequisites:
+      - "specs/{feature}/spec.md"
+    outputs:
+      - "specs/{feature}/checklists/"
+    gate: soft
+
+  - name: "speckit.implement"
+    phase: null
+    order: 6
+    description: "Execute implementation plan by processing tasks"
+    prerequisites:
+      - "specs/{feature}/tasks.md"
+    outputs: []
+    gate: soft
+
+  - name: "speckit.analyze"
+    phase: null
+    order: 7
+    description: "Cross-artifact consistency and quality analysis"
+    prerequisites:
+      - "specs/{feature}/spec.md"
+      - "specs/{feature}/plan.md"
+      - "specs/{feature}/tasks.md"
+    outputs: []
+    gate: soft
+
+  - name: "speckit.constitution"
+    phase: null
+    order: 0
+    description: "Create or update project constitution"
+    prerequisites: []
+    outputs:
+      - ".specify/memory/constitution.md"
+    gate: soft
+
+  - name: "speckit.taskstoissues"
+    phase: null
+    order: 8
+    description: "Convert tasks to GitHub Issues"
+    prerequisites:
+      - "specs/{feature}/tasks.md"
+    outputs: []
+    gate: soft
+# Lifecycle hooks (bind to Spec Kit commands)
+hooks:
+  before_specify:
+    - extension: "founder-os"
+      command: "os.audit"
+      description: "Validate Phase 1+2 artifact completeness"
+      prompt: "Run full pipeline audit. Verify all Phase 1 and Phase 2 artifacts exist and are structurally valid before proceeding to specification."
+      enabled: true
+      optional: true  # Allows speckit-only workflows without Phase 1+2 artifacts. Emits a warning if artifacts are missing.
+
+  before_plan:
+    - extension: "founder-os"
+      command: "os.audit"
+      description: "Validate pipeline state before planning"
+      prompt: "Run full pipeline audit before generating implementation plan. Verify Phase 1 and Phase 2 artifacts exist, are structurally valid, and design tokens/constraints from Phase 2 are complete."
+      enabled: true
+      optional: false
+
+  before_tasks:
+    - extension: "founder-os"
+      command: "os.audit"
+      description: "Validate pipeline state before task decomposition"
+      prompt: "Run full pipeline audit before generating tasks."
+      enabled: true
+      optional: false
+
+  before_implement:
+    - extension: "founder-os"
+      command: "os.cross-examine"
+      description: "Cross-examine full corpus for consistency before implementation"
+      prompt: "Run full-corpus cross-examination. Verify all decision chains are consistent and no critical gaps exist before writing code."
+      enabled: true
+      optional: false  # Mandatory — implementation must not start with broken decision chains
+
+    - extension: "founder-os"
+      command: "os.audit"
+      description: "Validate full pipeline before implementation"
+      prompt: "Run full pipeline audit. Verify all phases are complete before writing code."
+      enabled: true
+      optional: false
+
+  after_discover:
+    - extension: "founder-os"
+      command: "os.audit"
+      description: "Validate discovery output completeness"
+      prompt: "Validate that codebase-profile.md and improvement-opportunities.md exist and are structurally complete after os.discover. Check required sections are populated."
+      enabled: true
+      optional: true  # Discovery is optional entry point; do not block
+  after_tasks:
+    - extension: "founder-os"
+      command: "os.audit"
+      description: "Validate task sizing constraints"
+      prompt: "Run task sizing validation via bash .specify/scripts/bash/pipeline-task-sizer.sh. Check that all tasks in tasks.md are under 4000 tokens, include file paths, and have acceptance criteria. Report any violations."
+      enabled: true
+      optional: false
+
+  after_implement:
+    - extension: "founder-os"
+      command: "os.qa"
+      description: "Run QA & Trust analysis"
+      prompt: "Run paranoia-level QA check on implemented code focusing on offline failures, AI hallucinations, and edge cases."
+      enabled: true
+      optional: true
+
+    - extension: "founder-os"
+      command: "os.safety"
+      description: "Run Trust & Safety analysis"
+      prompt: "Generate hallucination mitigation scoring and source attribution trust report."
+      enabled: true
+      optional: true
