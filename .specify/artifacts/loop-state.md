@@ -2,12 +2,12 @@
 artifact_meta:
   produced_by: "os.loop"
   produced_at: "2026-04-12T04:10:00Z"
-  confidence: 0.40
+  confidence: 0.50
   inputs_used:
     - ".specify/artifacts/sketch.md"
     - ".specify/extensions.yml"
   stale_after: "on_input_change"
-  revision: 10
+  revision: 11
   quality_scores:
     specificity: null
     actionability: null
@@ -78,6 +78,16 @@ main
 4. **Temporal.io is closest analog** but has no mobile interface, no MCP integration, no timezone-gating
 5. **The gap is confirmed:** pieces exist in isolation but nobody has assembled them into a temporal command center
 
+## Cycle 8 Evaluation
+
+### os.usp -> usp.md
+- **Output:** usp.md (326 lines, confidence 0.85)
+- **All 9 required sections present** including Positioning Matrix and Compound Moat
+- **USP:** "Delta-T Zaman is the only mobile-first temporal governance layer that lets a developer set timezone-gated execution rules, circadian kill-switches, and workspace-level undo for autonomous AI agents — controlled entirely from a clock interface on their phone."
+- **Falsifiability:** 3 concrete criteria defined
+- **All 4 stress tests pass:** 0/15 competitors substitutable
+- **Gate criteria:** All passed
+
 ## Undo History
 
 | Undo | From Cycle | To Cycle | Reason | Artifacts Archived |
@@ -110,18 +120,18 @@ main
 5. **Revenue model shift:** From .99 one-time utility to SaaS infrastructure (9-49/mo) for the agent orchestration layer
 6. **Critical timing window:** 2025-2027 is the "trust gap" -- agents can execute but developers lack temporal governance tools
 
-## Next Recommended Action (Cycle 8)
+## Next Recommended Action (Cycle 9)
 
-**Agent:** os.usp
-**Status:** READY -- all prerequisites met (competitor-matrix.md 0.82, steal-differentiate-ignore.md 0.80, icp.md 0.78)
-**Reason:** Must distill a falsifiable USP for the temporal command center positioning. The competitive analysis confirmed the gap -- now USP must articulate why Delta-T uniquely fills it.
-**Expected output:** usp.md (r2)
+**Agent:** os.feasibility
+**Status:** READY -- all prerequisites met (usp.md 0.85, market-map.md 0.82)
+**Reason:** Must validate technical feasibility of the expanded architecture: Tauri 2.x + Cloudflare KV/D1 + Undisk MCP + iOS mobile. The twist significantly expanded the technical surface area.
+**Expected output:** feasibility.md (r2)
 
 ## Pipeline Progress
-- **Completed:** 3/24 agents (os.sketch, os.market replay, os.competition)
-- **Artifacts:** 7 surviving (sketch + 3 market + 3 competition), 8 archived
-- **Phase 1 progress:** 7/12 artifacts -- pipeline accelerating
-- **Next:** os.usp (cycle 8) -> os.feasibility (cycle 9) -> os.validate (cycle 10)
+- **Completed:** 4/24 agents (os.sketch, os.market replay, os.competition, os.usp)
+- **Artifacts:** 8 surviving (sketch + 3 market + 3 competition + usp), 8 archived
+- **Phase 1 progress:** 8/12 artifacts -- pipeline accelerating
+- **Next:** os.feasibility (cycle 9) -> os.validate (cycle 10) -> os.critic (hard gate)
 - **Critical path:** os.competition -> os.usp -> os.feasibility -> os.validate -> os.critic (hard gate)
 
 ## Escalations
