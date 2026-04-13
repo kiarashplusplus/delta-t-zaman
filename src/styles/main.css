@@ -377,6 +377,160 @@ button, input[type="checkbox"] {
   border-radius: 4px;
 }
 
+/* Alarm List & Header */
+.alarm-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.alarm-list-header h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.alarm-list-header button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--spacing-xl);
+  background: var(--theme-primary);
+  color: var(--theme-on-primary);
+  border: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  transition: transform var(--timing-fast) ease;
+}
+.alarm-list-header button:hover {
+  transform: scale(1.05);
+}
+
+.alarm-list-empty {
+  text-align: center;
+  color: var(--theme-muted);
+  padding: var(--spacing-2xl) 0;
+  font-size: var(--font-size-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.alarm-list-empty button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--spacing-xl);
+  background: var(--theme-primary);
+  color: var(--theme-on-primary);
+  border: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+}
+
+/* Alarm Form Modal (Dialog) */
+.alarm-form-modal {
+  border: none;
+  border-radius: var(--spacing-md);
+  background: var(--theme-surface);
+  color: var(--theme-on-surface);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xl);
+  width: 90%;
+  max-width: 400px;
+}
+
+.alarm-form-modal::backdrop {
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+
+.alarm-form h2 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-xl);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.form-group input[type="text"],
+.form-group input[type="time"],
+.form-group select {
+  padding: var(--spacing-sm);
+  border-radius: var(--spacing-xs);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-surface);
+  color: var(--theme-on-surface);
+  font-size: var(--font-size-base);
+}
+
+.checkbox-group label,
+.custom-day-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: normal;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+.form-actions button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--spacing-xs);
+  border: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+}
+
+.form-actions button[type="button"] {
+  background: var(--theme-border);
+  color: var(--theme-on-surface);
+}
+
+.form-actions button[type="submit"] {
+  background: var(--theme-primary);
+  color: var(--theme-on-primary);
+}
+
+/* Settings Form Elements Enhancement */
+.settings-section input[type="checkbox"] {
+  accent-color: var(--theme-primary);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.settings-section button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--spacing-xs);
+  background: var(--theme-border);
+  color: var(--theme-on-surface);
+  border: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+.settings-section button:hover {
+  filter: brightness(0.9);
+}
+
 @media print {
   body {
     display: none !important;
