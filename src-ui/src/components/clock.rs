@@ -193,7 +193,13 @@ pub fn ClockCard(zone: TimeZoneEntry) -> impl IntoView {
                     on:click=move |_| {
                         let mut clocks = clock_state.zones.get_untracked();
                         clocks.retain(|c| c.id != zone_id_for_delete);
-                        clock_state.zones.set(clocks);
+                        for (sort_order, clock) in clocks.iter_mut().enumerate() {
+                            clock.sort_order = sort_order;
+                        }
+                        clock_state.zones.set(clocks.clone());
+                        spawn_local(async move {
+                            crate::ipc::set_store_value("zones.dat", "zones", clocks).await;
+                        });
                     }
                 >
                     "×"

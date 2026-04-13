@@ -97,8 +97,8 @@ pub fn TimezoneSearchModal() -> impl IntoView {
             let result = &res[idx];
             let mut clocks = clock_state.zones.get_untracked();
             
-            if clocks.iter().any(|c| c.display_label == result.match_name) {
-                set_warning.set(format!("You already have a clock labeled \"{}\".", result.match_name));
+            if clocks.iter().any(|c| c.iana_id == result.tz.id) {
+                set_warning.set(format!("{} is already in your clock list.", result.tz.id));
                 return;
             }
 
