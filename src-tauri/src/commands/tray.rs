@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use tauri::{AppHandle, Manager, WebviewWindow};
+use tauri::{AppHandle, WebviewWindow};
 
 #[derive(Deserialize)]
 pub struct TrayZone {

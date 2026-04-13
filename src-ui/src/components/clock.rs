@@ -148,6 +148,8 @@ pub fn ClockCard(zone: TimeZoneEntry) -> impl IntoView {
     });
 
     let display_label = zone.display_label.clone();
+    let display_label_for_blur = display_label.clone();
+    let display_label_for_delete = display_label.clone();
     let meta = crate::utils::get_timezone_metadata(&zone.iana_id);
     let lat = meta.as_ref().map(|m| m.latitude).unwrap_or(0.0);
     let lng = meta.as_ref().map(|m| m.longitude).unwrap_or(0.0);
@@ -164,13 +166,17 @@ pub fn ClockCard(zone: TimeZoneEntry) -> impl IntoView {
                     contenteditable="true" 
                     spellcheck="false"
                     on:blur=move |ev| {
-                        let new_val = event_target::<web_sys::HtmlElement>(&ev).inner_text();
+                        let new_val = crate::product::normalized_clock_label(
+                            &event_target::<web_sys::HtmlElement>(&ev).inner_text(),
+                            &display_label_for_blur,
+                        );
                         let mut clocks = clock_state.zones.get_untracked();
                         if let Some(c) = clocks.iter_mut().find(|c| c.id == zone_id_for_rename) {
-                            c.display_label = new_val;
-                            clock_state.zones.set(clocks.clone());
+                            c.display_label = new_val.clone();
+                            event_target::<web_sys::HtmlElement>(&ev).set_inner_text(&new_val);
+                            crate::store::apply_zones(clock_state, clocks.clone());
                             spawn_local(async move {
-                                crate::ipc::set_store_value("zones.dat", "zones", clocks).await;
+                                crate::store::save_zones(clocks).await;
                             });
                         }
                     }
@@ -191,14 +197,21 @@ pub fn ClockCard(zone: TimeZoneEntry) -> impl IntoView {
                     class="clock-card__delete" 
                     aria-label="Delete clock"
                     on:click=move |_| {
+                        if !web_sys::window()
+                            .unwrap()
+                            .confirm_with_message(&crate::product::confirm_delete_clock_message(&display_label_for_delete))
+                            .unwrap_or(false)
+                        {
+                            return;
+                        }
                         let mut clocks = clock_state.zones.get_untracked();
                         clocks.retain(|c| c.id != zone_id_for_delete);
                         for (sort_order, clock) in clocks.iter_mut().enumerate() {
                             clock.sort_order = sort_order;
                         }
-                        clock_state.zones.set(clocks.clone());
+                        crate::store::apply_zones(clock_state, clocks.clone());
                         spawn_local(async move {
-                            crate::ipc::set_store_value("zones.dat", "zones", clocks).await;
+                            crate::store::save_zones(clocks).await;
                         });
                     }
                 >
@@ -220,17 +233,46 @@ pub fn ClockCard(zone: TimeZoneEntry) -> impl IntoView {
 pub fn ClockList() -> impl IntoView {
     let clock_state = use_context::<crate::state::ClockState>().expect("ClockState missing");
     let modal_state = use_context::<crate::state::ModalState>().expect("ModalState missing");
+    let empty_copy = crate::product::clocks_empty_copy();
+    let add_label = empty_copy.action_label.clone().unwrap_or_else(|| "+ Add Timezone".into());
 
     view! {
         <div class="clock-list" role="list">
-            <Show when=move || !clock_state.zones.get().is_empty() fallback=|| view! { <div class="clock-list__empty">"Add a timezone"</div> }>
+            <Show when=move || !clock_state.zones.get().is_empty() fallback=move || view! {
+                <div class="clock-list__empty" style="display: grid; gap: 0.85rem; padding: 1.25rem; border: 1px dashed rgba(148, 163, 184, 0.45); border-radius: 1rem; background: rgba(148, 163, 184, 0.08);">
+                    <div>
+                        <div style="font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem;">{empty_copy.title.clone()}</div>
+                        <div style="color: var(--theme-muted); line-height: 1.5;">{empty_copy.body.clone()}</div>
+                    </div>
+                    <div>
+                        <button class="clock-list__add-btn" on:click=move |_| modal_state.show_timezone_search.set(true)>{add_label.clone()}</button>
+                    </div>
+                </div>
+            }>
                 <For
                     each=move || clock_state.zones.get()
                     key=|z| z.id.clone()
                     children=move |zone| view! { <ClockCard zone=zone/> }
                 />
             </Show>
-            <button class="clock-list__add-btn" on:click=move |_| modal_state.show_timezone_search.set(true)>"+ Add Timezone"</button>
+            <Show when=move || !clock_state.zones.get().is_empty()>
+                <button class="clock-list__add-btn" on:click=move |_| modal_state.show_timezone_search.set(true)>"+ Add Timezone"</button>
+            </Show>
         </div>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn clock_label_normalization_trims_without_allowing_blank_names() {
+        assert_eq!(
+            crate::product::normalized_clock_label("  Paris HQ  ", "Fallback"),
+            "Paris HQ"
+        );
+        assert_eq!(
+            crate::product::normalized_clock_label("   ", "Fallback"),
+            "Fallback"
+        );
     }
 }

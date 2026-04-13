@@ -1,6 +1,6 @@
 use leptos::*;
+use crate::models::{AlarmAttention, TimeZoneEntry};
 use chrono::Utc;
-use crate::models::TimeZoneEntry;
 
 #[derive(Clone, Copy)]
 pub struct GlobalTime(pub RwSignal<i64>);
@@ -32,24 +32,6 @@ pub struct ClockState {
 pub fn provide_clock_state() {
     let zones = create_rw_signal(Vec::new());
 
-    spawn_local(async move {
-        if let Some(saved) = crate::ipc::get_store_value::<Vec<TimeZoneEntry>>("zones.dat", "zones").await {
-            zones.set(saved);
-        } else {
-            // Default fallback
-            let default_zone = TimeZoneEntry {
-                id: "utc-1".into(),
-                iana_id: "UTC".into(),
-                display_label: "Universal Time".into(),
-                sort_order: 0,
-                pinned_to_tray: false,
-                created_at: Utc::now().timestamp_millis() as u64,
-            };
-            zones.set(vec![default_zone.clone()]);
-            crate::ipc::set_store_value("zones.dat", "zones", vec![default_zone]).await;
-        }
-    });
-
     provide_context(ClockState { zones });
 }
 
@@ -61,12 +43,6 @@ pub struct UserPreferencesState {
 pub fn provide_user_preferences() {
     let prefs = create_rw_signal(crate::models::UserPreferences::default());
 
-    spawn_local(async move {
-        if let Some(saved) = crate::ipc::get_store_value::<crate::models::UserPreferences>("preferences.dat", "preferences").await {
-            prefs.set(saved);
-        }
-    });
-
     provide_context(UserPreferencesState { prefs });
 }
 
@@ -75,16 +51,35 @@ pub struct AlarmState {
     pub alarms: RwSignal<Vec<crate::models::Alarm>>,
 }
 
+#[derive(Clone, Copy)]
+pub struct AlarmAttentionState {
+    pub attention: RwSignal<AlarmAttention>,
+}
+
 pub fn provide_alarm_state() {
     let alarms = create_rw_signal(Vec::new());
+    let attention = create_rw_signal(AlarmAttention::default());
 
-    spawn_local(async move {
-        if let Some(saved) = crate::ipc::get_store_value::<Vec<crate::models::Alarm>>("alarms.dat", "alarms").await {
-            alarms.set(saved);
-        }
-    });
+    #[cfg(target_arch = "wasm32")]
+    {
+        let alarm_state = AlarmState { alarms };
+        let attention_state = AlarmAttentionState { attention };
+        crate::ipc::listen_for_event("alarms-updated", move || {
+            let alarm_state = alarm_state;
+            let attention_state = attention_state;
+            spawn_local(async move {
+                let _ = crate::client::reload_alarm_state(alarm_state, attention_state).await;
+            });
+        });
+
+        let attention_signal = attention;
+        crate::ipc::listen_for_alarm_attention(move |payload| {
+            attention_signal.set(payload);
+        });
+    }
 
     provide_context(AlarmState { alarms });
+    provide_context(AlarmAttentionState { attention });
 }
 
 #[derive(Clone, Copy)]

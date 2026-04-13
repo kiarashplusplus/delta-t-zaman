@@ -109,3 +109,103 @@ pub fn get_timezone_offset_minutes(time_zone: &str, timestamp: i64) -> i32 {
     }
     0
 }
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TimeZoneParts {
+    pub year: u32,
+    pub month: u32,
+    pub day: u32,
+    pub hour: u32,
+    pub minute: u32,
+    pub weekday: u32,
+}
+
+impl TimeZoneParts {
+    pub fn date_key(&self) -> String {
+        format!("{:04}-{:02}-{:02}", self.year, self.month, self.day)
+    }
+}
+
+pub fn parse_alarm_time(target_time: &str) -> Option<(u32, u32)> {
+    let parts: Vec<&str> = target_time.split(':').collect();
+    if parts.len() != 2 {
+        return None;
+    }
+
+    let hour = parts[0].parse().ok()?;
+    let minute = parts[1].parse().ok()?;
+    Some((hour, minute))
+}
+
+pub fn get_zoned_time_parts(timestamp: i64, time_zone: &str) -> Option<TimeZoneParts> {
+    let date = Date::new(&JsValue::from_f64(timestamp as f64));
+    let options = Object::new();
+    let _ = Reflect::set(&options, &JsValue::from_str("timeZone"), &JsValue::from_str(time_zone));
+    let _ = Reflect::set(&options, &JsValue::from_str("year"), &JsValue::from_str("numeric"));
+    let _ = Reflect::set(&options, &JsValue::from_str("month"), &JsValue::from_str("2-digit"));
+    let _ = Reflect::set(&options, &JsValue::from_str("day"), &JsValue::from_str("2-digit"));
+    let _ = Reflect::set(&options, &JsValue::from_str("hour"), &JsValue::from_str("2-digit"));
+    let _ = Reflect::set(&options, &JsValue::from_str("minute"), &JsValue::from_str("2-digit"));
+    let _ = Reflect::set(&options, &JsValue::from_str("weekday"), &JsValue::from_str("short"));
+    let _ = Reflect::set(&options, &JsValue::from_str("hourCycle"), &JsValue::from_str("h23"));
+
+    let formatter = Intl::DateTimeFormat::new(&Array::of1(&JsValue::from_str("en-US")), &options);
+    let parts = formatter.format_to_parts(&date);
+
+    let mut year = None;
+    let mut month = None;
+    let mut day = None;
+    let mut hour = None;
+    let mut minute = None;
+    let mut weekday = None;
+
+    for i in 0..parts.length() {
+        let part = parts.get(i);
+        if let Ok(obj) = part.dyn_into::<Object>() {
+            let part_type = Reflect::get(&obj, &JsValue::from_str("type")).ok()?.as_string()?;
+            let value = Reflect::get(&obj, &JsValue::from_str("value")).ok()?.as_string()?;
+
+            match part_type.as_str() {
+                "year" => year = value.parse().ok(),
+                "month" => month = value.parse().ok(),
+                "day" => day = value.parse().ok(),
+                "hour" => hour = value.parse().ok(),
+                "minute" => minute = value.parse().ok(),
+                "weekday" => {
+                    weekday = match value.as_str() {
+                        "Sun" => Some(0),
+                        "Mon" => Some(1),
+                        "Tue" => Some(2),
+                        "Wed" => Some(3),
+                        "Thu" => Some(4),
+                        "Fri" => Some(5),
+                        "Sat" => Some(6),
+                        _ => None,
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    Some(TimeZoneParts {
+        year: year?,
+        month: month?,
+        day: day?,
+        hour: hour?,
+        minute: minute?,
+        weekday: weekday?,
+    })
+}
+
+pub fn next_alarm_date_key(timestamp: i64, time_zone: &str, target_time: &str) -> Option<String> {
+    let current = get_zoned_time_parts(timestamp, time_zone)?;
+    let (target_hour, target_minute) = parse_alarm_time(target_time)?;
+
+    if (current.hour, current.minute) <= (target_hour, target_minute) {
+        return Some(current.date_key());
+    }
+
+    let tomorrow = get_zoned_time_parts(timestamp + 24 * 60 * 60 * 1000, time_zone)?;
+    Some(tomorrow.date_key())
+}

@@ -1,6 +1,10 @@
 mod ipc;
 mod models;
 mod state;
+mod store;
+mod client;
+mod product;
+mod workflow;
 mod utils;
 mod daynight;
 mod components {

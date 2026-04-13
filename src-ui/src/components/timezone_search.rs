@@ -84,6 +84,10 @@ pub fn TimezoneSearchModal() -> impl IntoView {
     });
 
     let is_open = move || modal_state.show_timezone_search.get();
+    let search_state = move || crate::product::timezone_search_copy(
+        &search_query.get(),
+        results.get().len(),
+    );
 
     let close_modal = move || {
         modal_state.show_timezone_search.set(false);
@@ -116,9 +120,9 @@ pub fn TimezoneSearchModal() -> impl IntoView {
                 created_at: Utc::now().timestamp_millis() as u64,
             });
 
-            clock_state.zones.set(clocks.clone());
+            crate::store::apply_zones(clock_state, clocks.clone());
             spawn_local(async move {
-                crate::ipc::set_store_value("zones.dat", "zones", clocks).await;
+                crate::store::save_zones(clocks).await;
             });
             close_modal();
         }
@@ -165,6 +169,15 @@ pub fn TimezoneSearchModal() -> impl IntoView {
                 
                 <div class="search-modal__warning" style=move || if warning.get().is_empty() { "display: none;" } else { "display: block;" }>
                     {move || warning.get()}
+                </div>
+
+                <div style="margin-bottom: 0.85rem; padding: 0.85rem 0.95rem; border-radius: 0.9rem; background: rgba(148, 163, 184, 0.08); border: 1px solid rgba(148, 163, 184, 0.18);">
+                    <div style="font-size: 0.96rem; font-weight: 700; margin-bottom: 0.25rem;">
+                        {move || search_state().title}
+                    </div>
+                    <div style="color: var(--theme-muted); line-height: 1.45; font-size: var(--font-size-sm);">
+                        {move || search_state().body}
+                    </div>
                 </div>
 
                 <ul class="search-modal__results">
@@ -219,5 +232,17 @@ pub fn TimezoneSearchModal() -> impl IntoView {
                 on:click=move |_| close_modal()
             ></div>
         </div>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn timezone_search_copy_covers_idle_and_results_states() {
+        let idle = crate::product::timezone_search_copy("", 0);
+        assert!(idle.title.contains("Search by city"));
+
+        let ready = crate::product::timezone_search_copy("paris", 2);
+        assert_eq!(ready.title, "2 matches ready");
     }
 }

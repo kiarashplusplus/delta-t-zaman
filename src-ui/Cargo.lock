@@ -243,6 +243,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "delta-t-zaman-shared"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "derive-where"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1429,6 +1437,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "console_error_panic_hook",
+ "delta-t-zaman-shared",
  "js-sys",
  "leptos",
  "serde",

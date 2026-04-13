@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tauri::{AppHandle, Manager, WebviewWindow};
+use tauri::{AppHandle, WebviewWindow};
 
 #[cfg(desktop)]
 use tauri_plugin_autostart::ManagerExt;

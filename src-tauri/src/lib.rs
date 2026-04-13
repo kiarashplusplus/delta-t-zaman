@@ -37,18 +37,21 @@ pub fn run() {
             get_system_info, check_dnd_status,
             update_tray_display, hide_to_tray, show_from_tray,
             set_always_on_top, set_autostart, save_window_state, restore_window_state, toggle_compact_mode, get_platform_close_behavior,
-            schedule_alarm_notification, cancel_alarm_notification, get_notification_permission, request_notification_permission,
+            schedule_alarm_notification, perform_alarm_action, cancel_alarm_notification, get_notification_permission, request_notification_permission,
             send_telemetry_event,
             check_for_update, install_update,
-            export_user_data, import_user_data,
+            export_user_data, import_user_data, pick_export_destination, pick_import_source, pick_import_mode,
             request_battery_exemption, request_exact_alarm_permission,
             check_timezone_data_update,
             handle_deep_link,
             heartbeat_ack,
-            load_store_value, save_store_value
+            load_zones_store, save_zones_store,
+            load_alarms_store, save_alarms_store,
+            load_preferences_store, save_preferences_store
         ])
         .setup(|app| {
             tray::setup_tray(app.handle())?;
+            start_alarm_monitor(app.handle().clone());
             
             let app_handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
