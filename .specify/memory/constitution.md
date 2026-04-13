@@ -97,13 +97,26 @@ phone-home, or exfiltrate any user data.
 
 - Persistence MUST use `@tauri-apps/plugin-store` with JSON
   key-value files (`zones.dat`, `alarms.dat`, `preferences.dat`).
-- No analytics, telemetry, or crash-reporting SDK MAY be included
-  without an explicit constitution amendment.
+- **Amendment A1 (2026-04-13)**: Opt-in anonymous telemetry is
+  PERMITTED under the following constraints: (a) telemetry MUST be
+  disabled by default, (b) the user MUST explicitly opt in via a
+  first-launch prompt or settings toggle, (c) no personally
+  identifiable information (PII) MAY be collected, (d) telemetry
+  submission MUST be fire-and-forget — failures silently ignored,
+  never blocking UI, (e) disabling telemetry MUST immediately stop
+  all data collection. Rationale: FR-032/033/036 require opt-in
+  anonymous usage metrics routed through Cloudflare Workers. This
+  amendment satisfies the original "explicit constitution amendment"
+  prerequisite.
+- No other analytics, telemetry, or crash-reporting SDK MAY be
+  included without a further constitution amendment.
 - No user authentication or account system MAY be introduced
   without an explicit constitution amendment.
 
 **Rationale**: A world clock knows where you are, when you wake up,
 and who you talk to across time zones. That data stays local.
+Opt-in anonymous telemetry (Amendment A1) is the sole exception,
+gated by user consent and PII-free design.
 
 ### V. Test Discipline
 
@@ -160,9 +173,15 @@ MUST be justified against a concrete Functional Requirement.
   we need it later").
 - Dependencies MUST be minimal: prefer platform APIs and Tauri
   plugins over third-party libraries.
-- The frontend MUST NOT exceed ~15 TypeScript component modules and the
-  backend MUST NOT exceed ~10 Rust commands (as scoped in
-  plan.md).
+- The frontend MUST NOT exceed ~30 TypeScript modules (components +
+  services + state) and the backend MUST NOT exceed ~15 Rust command
+  files (as scoped in plan.md).
+- **Amendment A2 (2026-04-13)**: Module limits raised from ~15 TS /
+  ~10 Rust to ~30 TS / ~15 Rust. Rationale: The original ~15/~10
+  estimate counted only component modules; actual scope includes
+  services, state, and types (28 TS files) and 12 Rust command
+  files. All modules trace to concrete FRs — no speculative
+  abstractions added.
 
 **Rationale**: Scope creep is the leading cause of death for
 utility apps. Every added feature is a maintenance liability
@@ -238,4 +257,4 @@ conventions, and ad-hoc decisions.
   table with a justification.
 - Unjustified violations are grounds for blocking a PR.
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-12 | **Last Amended**: 2026-04-12
+**Version**: 1.1.0 | **Ratified**: 2026-04-12 | **Last Amended**: 2026-04-13

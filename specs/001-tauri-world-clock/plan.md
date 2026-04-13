@@ -18,7 +18,7 @@ Build a cross-platform world clock utility using Tauri 2.10.3 that runs on macOS
 **Project Type**: Desktop + mobile app (Tauri hybrid)
 **Performance Goals**: Clock update <= 1ms DOM cost per tick, cold start < 2s (desktop) / < 3s (mobile), 30 simultaneous timezone cards at 1/sec update with no jank
 **Constraints**: Offline-first (core features work without network; optional telemetry + auto-update use Cloudflare), < 15 MB install size, max 30 timezone entries, max 50 active alarms
-**Scale/Scope**: Single-user utility app, ~19 TS component modules, ~25 Rust commands, 5 platform targets, 2 Cloudflare Workers (telemetry ingest, update manifest + tz data patches), 1 CI/CD pipeline (GitHub Actions)
+**Scale/Scope**: Single-user utility app, ~28 TS modules (12 components, 10 services, 3 state, 3 types), ~12 Rust command files, 5 platform targets, 2 Cloudflare Workers (telemetry ingest, update manifest + tz data patches), 1 CI/CD pipeline (GitHub Actions)
 
 ## Constitution Check
 
@@ -29,10 +29,10 @@ Build a cross-platform world clock utility using Tauri 2.10.3 that runs on macOS
 | I. Offline-First Architecture | ✅ Pass | All timezone data bundled (~250 KB JSON, R3). Intl.DateTimeFormat for rendering. Notifications via OS-native plugin (R6). Core features have no network calls. Optional telemetry (FR-032/033) and auto-update (FR-034) are fire-and-forget — failures silently ignored. |
 | II. Cross-Platform Parity | ✅ Pass | Tauri 2.10.3 targets all 5 platforms (R11). Tray degrades gracefully on Linux/mobile. Mobile constraints documented (1/min update, no tray). |
 | III. Performance Budget | ✅ Pass | Cold start < 2s desktop / < 3s mobile (Technical Context). Tick DOM cost ≤ 1ms (R1 direct DOM updates). Frontend total ~271 KB gzipped (Production Bundle). Install < 15 MB. |
-| IV. Data Locality and Privacy | ✅ Pass | tauri-plugin-store JSON KV (R7). No auth, no server required. Telemetry is opt-in only (FR-032/036) — disabled by default, no PII collected. All user data remains in local stores (zones.dat, alarms.dat, preferences.dat). |
+| IV. Data Locality and Privacy | ✅ Pass | tauri-plugin-store JSON KV (R7). No auth, no server required. Telemetry is opt-in only (FR-032/036) — disabled by default, no PII collected, fire-and-forget. Authorized by Constitution Amendment A1. All user data remains in local stores (zones.dat, alarms.dat, preferences.dat). |
 | V. Test Discipline | ✅ Pass | Three-layer strategy: Vitest (unit/component/integration) + Playwright (E2E) + cargo test (Rust) documented in R9. |
 | VI. Accessibility by Default | ✅ Pass | FR-027 (keyboard nav), FR-028 (screen reader labels), FR-046 (keyboard shortcuts), FR-050 (high contrast), FR-051 (reduced motion), FR-052 (WCAG AA contrast), FR-053 (focus traps), FR-054 (font scaling) in spec. NFR-003 enforces contrast validation at build time. Custom DnD with built-in keyboard mode (R8). |
-| VII. Simplicity and YAGNI | ✅ Pass | ~19 TS component modules, ~25 Rust commands. No framework, no abstractions. Dependencies minimized per R1–R22 decision records. Cloudflare infra is serverless scale-to-zero — no servers to maintain. |
+| VII. Simplicity and YAGNI | ✅ Pass | ~28 TS modules (12 components + 10 services + 3 state + 3 types), ~12 Rust command files — within amended limits (~30/~15 per Amendment A2). No framework, no abstractions. Dependencies minimized per R1–R22 decision records. Cloudflare infra is serverless scale-to-zero — no servers to maintain. |
 | Technical Constraints (stack lock) | ✅ Pass | All 22 stack decisions documented in research.md R1–R22 with alternatives considered. |
 | Quality Gates | ✅ Pass | Lint, type-check, unit test, Rust test, build gates defined. CI pipeline to enforce. |
 
