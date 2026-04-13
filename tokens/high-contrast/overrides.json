@@ -1,0 +1,18 @@
+{
+  "theme": {
+    "surface": { "value": "#000000" },
+    "on-surface": { "value": "#ffffff" },
+    "border": { "value": "#ffffff" },
+    "primary": { "value": "#ffff00" },
+    "on-primary": { "value": "#000000" },
+    "muted": { "value": "#e5e7eb" }
+  },
+  "component": {
+    "clockCard": {
+      "border": { "value": "#ffffff" }
+    },
+    "alarmCard": {
+      "border": { "value": "#ffffff" }
+    }
+  }
+}

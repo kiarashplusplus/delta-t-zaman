@@ -1,0 +1,12 @@
+{
+  "theme": {
+    "surface": { "value": "{color.gray.50}" },
+    "on-surface": { "value": "{color.gray.900}" },
+    "primary": { "value": "{color.accent}" },
+    "on-primary": { "value": "#ffffff" },
+    "border": { "value": "{color.gray.200}" },
+    "muted": { "value": "{color.gray.500}" },
+    "danger": { "value": "{color.danger}" },
+    "success": { "value": "{color.success}" }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "source": ["tokens/base/**/*.json", "tokens/semantic/light.json", "tokens/component/**/*.json"],
+  "platforms": {
+    "css-light": {
+      "transformGroup": "css",
+      "buildPath": "src/styles/",
+      "files": [{
+        "destination": "tokens.css",
+        "format": "css/variables",
+        "options": {
+          "selector": ":root, [data-theme='light']",
+          "outputReferences": true
+        }
+      }]
+    },
+    "css-dark": {
+      "transformGroup": "css",
+      "buildPath": "src/styles/",
+      "source": ["tokens/base/**/*.json", "tokens/semantic/dark.json", "tokens/component/**/*.json"],
+      "files": [{
+        "destination": "tokens-dark.css",
+        "format": "css/variables",
+        "options": {
+          "selector": "[data-theme='dark']",
+          "outputReferences": true
+        }
+      }]
+    },
+    "css-high-contrast": {
+      "transformGroup": "css",
+      "buildPath": "src/styles/",
+      "source": ["tokens/base/**/*.json", "tokens/semantic/light.json", "tokens/component/**/*.json", "tokens/high-contrast/overrides.json"],
+      "files": [{
+        "destination": "high-contrast.css",
+        "format": "css/variables",
+        "options": {
+          "selector": "[data-theme='high-contrast']",
+          "outputReferences": true
+        }
+      }]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+[build]
+target = "index.html"
+dist = "../dist"
+public_url = "/"
+
+[serve]
+port = 1420
+open = false
+
+[watch]
+watch = ["src", "../src/styles", "../src/data"]
+ignore = ["../src-tauri"]

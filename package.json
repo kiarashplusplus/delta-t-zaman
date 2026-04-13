@@ -1,0 +1,15 @@
+{
+  "name": "tmpapp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build:tokens": "style-dictionary build --config style-dictionary.config.json",
+    "tauri": "tauri"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "style-dictionary": "^4.4.0"
+  }
+}

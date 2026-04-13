@@ -1,0 +1,5 @@
+/Users/m1/Documents/delta-t-zaman/src-ui/target/debug/deps/syn_derive-f3b014b2071ddde2.d: /Users/m1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/syn_derive-0.1.8/src/lib.rs
+
+/Users/m1/Documents/delta-t-zaman/src-ui/target/debug/deps/libsyn_derive-f3b014b2071ddde2.dylib: /Users/m1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/syn_derive-0.1.8/src/lib.rs
+
+/Users/m1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/syn_derive-0.1.8/src/lib.rs:
