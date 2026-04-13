@@ -1,0 +1,164 @@
+@import "./tokens.css";
+
+/* Reset & Basics */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-on-surface, #000000);
+}
+
+/* Accessibility utility classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus indicators */
+:focus-visible {
+  outline: 2px solid var(--color-accent, #005fcc);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Grid layout for App */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+button, input[type="checkbox"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.tabs-container {
+  display: flex;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--color-muted, #666);
+}
+
+.tab.active {
+  color: var(--color-primary, #000);
+  border-bottom: 2px solid var(--color-primary, #000);
+}
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.panel.hidden {
+  display: none;
+}
+
+#toast-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Container Queries Example */
+.clock-list {
+  container-type: inline-size;
+  container-name: clocklist;
+}
+
+@container clocklist (min-width: 25rem) {
+  .clock-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+}
+
+/* Settings and About Panels */
+.settings-panel, .about-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.settings-section, .about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e0e0e0);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.settings-section h3, .about-section h3 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.settings-section label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings-section select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border, #ccc);
+  background: var(--color-surface, #fff);
+  color: var(--color-on-surface, #000);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface, #fff);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted, #ccc);
+  border-radius: 4px;
+}
+
+@media print {
+  body {
+    display: none !important;
+  }
+}

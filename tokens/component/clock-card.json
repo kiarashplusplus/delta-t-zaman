@@ -1,0 +1,10 @@
+{
+  "component": {
+    "clockCard": {
+      "background": { "value": "{theme.surface}" },
+      "border": { "value": "{theme.border}" },
+      "text": { "value": "{theme.on-surface}" },
+      "badge": { "value": "{theme.primary}" }
+    }
+  }
+}

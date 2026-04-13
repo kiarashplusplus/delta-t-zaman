@@ -1,0 +1,7 @@
+{
+  "timing": {
+    "fast": { "value": "150ms" },
+    "normal": { "value": "300ms" },
+    "slow": { "value": "500ms" }
+  }
+}

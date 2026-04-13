@@ -1,0 +1,27 @@
+{
+  "app_name": "Delta-T Zaman",
+  "tabs": {
+    "clocks": "Clocks",
+    "alarms": "Alarms",
+    "settings": "Settings"
+  },
+  "buttons": {
+    "add_timezone": "Add a timezone",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "snooze": "Snooze",
+    "dismiss": "Dismiss"
+  },
+  "labels": {
+    "search": "Search Timezones",
+    "time_format": "Time Format",
+    "theme": "Theme",
+    "high_contrast": "High Contrast"
+  },
+  "messages": {
+    "no_alarms": "No alarms yet",
+    "duplicate_timezone": "This timezone is already added"
+  }
+}

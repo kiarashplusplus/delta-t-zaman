@@ -1,0 +1,21 @@
+{
+  "identifier": "main-capability",
+  "description": "Main window capabilities",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "notification:default",
+    "notification:allow-notify",
+    "notification:allow-request-permission",
+    "notification:allow-is-permission-granted",
+    "store:default",
+    "os:default",
+    "autostart:default",
+    "positioner:default",
+    "updater:default",
+    "dialog:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "deep-link:default"
+  ]
+}
