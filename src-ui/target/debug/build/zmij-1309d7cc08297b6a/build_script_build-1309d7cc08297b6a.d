@@ -1,5 +1,0 @@
-/Users/m1/Documents/delta-t-zaman/src-ui/target/debug/build/zmij-1309d7cc08297b6a/build_script_build-1309d7cc08297b6a.d: /Users/m1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/build.rs
-
-/Users/m1/Documents/delta-t-zaman/src-ui/target/debug/build/zmij-1309d7cc08297b6a/build_script_build-1309d7cc08297b6a: /Users/m1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/build.rs
-
-/Users/m1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/build.rs:

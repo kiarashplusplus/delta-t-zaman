@@ -1,1 +1,0 @@
-rd_("CdCalculates the sun position for a given date and \xe2\x80\xa6DkThe <code>sun</code> crate is a library for calculating the position of \xe2\x80\xa6AoReturns the argument unchanged.BaCalls <code>U::from(self)</code>.CjHolds the azimuth and altitude angles of the sun position.")

@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+src-ui/target/
+src-tauri/target/
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
