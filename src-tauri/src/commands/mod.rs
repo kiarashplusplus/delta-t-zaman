@@ -9,3 +9,4 @@ pub mod platform;
 pub mod tz_data;
 pub mod deep_link;
 pub mod heartbeat;
+pub mod store_api;

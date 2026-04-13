@@ -837,7 +837,7 @@
     "utc_offset_minutes": -360,
     "latitude": 41.82999066,
     "longitude": -87.75005497,
-    "aliases": []
+    "aliases": ["Houston", "Dallas", "Austin", "San Antonio", "St. Louis", "New Orleans"]
   },
   {
     "id": "America/Chihuahua",

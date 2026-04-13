@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "identifier": "com.deltat.zaman",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "cd src-ui && trunk serve",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
-    "frontendDist": "../dist"
+    "beforeBuildCommand": "cd src-ui && trunk build",
+    "frontendDist": "dist"
   },
   "app": {
     "withGlobalTauri": true,
