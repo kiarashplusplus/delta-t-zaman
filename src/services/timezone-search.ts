@@ -97,7 +97,9 @@ export function searchTimezones(query: string): TimezoneMetadata[] {
     .filter(r => r.score > 0)
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
-      return a.tz.city.localeCompare(b.tz.city);
+      const aCity = a.tz.city || a.tz.id || '';
+      const bCity = b.tz.city || b.tz.id || '';
+      return aCity.localeCompare(bCity);
     })
     .map(r => r.tz)
     .slice(0, 20);

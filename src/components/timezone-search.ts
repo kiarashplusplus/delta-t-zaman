@@ -1,5 +1,6 @@
 import { searchTimezones } from '../services/timezone-search';
 import { getClocks, addClock } from '../state/clocks';
+import { subscribe } from '../state/event-bus';
 import type { TimezoneMetadata, TimeZoneEntry } from '../types/timezone';
 
 export class TimezoneSearchModal {
@@ -39,6 +40,10 @@ export class TimezoneSearchModal {
     document.body.appendChild(this.element);
 
     this.bindEvents();
+    
+    subscribe('OPEN_SEARCH_MODAL', () => {
+      this.open();
+    });
   }
 
   private bindEvents() {

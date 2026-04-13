@@ -190,5 +190,26 @@ export class ClockList {
         this.element.appendChild(card.element);
       }
     });
+
+    let addBtn = this.element.querySelector('.clock-list__add-btn') as HTMLElement;
+    if (!addBtn) {
+      addBtn = document.createElement('button');
+      addBtn.className = 'clock-list__add-btn';
+      addBtn.textContent = '+ Add Timezone';
+      addBtn.style.margin = '1rem auto';
+      addBtn.style.display = 'block';
+      addBtn.style.padding = '0.75rem 1.5rem';
+      addBtn.style.borderRadius = '8px';
+      addBtn.style.background = 'var(--color-primary, #005fcc)';
+      addBtn.style.color = 'white';
+      addBtn.style.border = 'none';
+      addBtn.style.cursor = 'pointer';
+      addBtn.addEventListener('click', () => {
+        import('../state/event-bus').then(({ publish }) => {
+          publish('OPEN_SEARCH_MODAL', null);
+        });
+      });
+    }
+    this.element.appendChild(addBtn);
   }
 }
