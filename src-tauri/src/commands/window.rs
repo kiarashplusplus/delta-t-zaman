@@ -112,7 +112,7 @@ pub fn get_platform_close_behavior(_app: AppHandle) -> PlatformCloseBehavior {
     let (platform, close_action, quit_shortcut) = ("linux", "tray", Some("Ctrl+Q"));
 
     #[cfg(mobile)]
-    let (platform, close_action, quit_shortcut) = ("mobile", "suspend", None);
+    let (platform, close_action, quit_shortcut) = ("mobile", "suspend", None::<&str>);
 
     PlatformCloseBehavior {
         platform: platform.to_string(),
